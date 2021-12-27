@@ -21,9 +21,7 @@
  
 
   <ItemGroup>
-    <Reference Include="Microsoft.DiaSymReader.Converter">
-      <HintPath>lib\net6\Microsoft.DiaSymReader.Converter.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\ext\symreader-converter\src\Microsoft.DiaSymReader.Converter\Microsoft.DiaSymReader.Converter.csproj" />
   </ItemGroup>
   <Import Project=".\Microsoft.Cci.Sources.targets" />
   

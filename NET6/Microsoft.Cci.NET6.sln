@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Cci.NET6", "Micro
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PeToText.NET6", "Samples\PeToText.NET6\PeToText.NET6.csproj", "{AE59B05A-CFD0-4D0A-A20C-072237E26FF7}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DiaSymReader.Converter", "ext\symreader-converter\src\Microsoft.DiaSymReader.Converter\Microsoft.DiaSymReader.Converter.csproj", "{9806ECF0-A21F-4C82-A039-0AA833123FFE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,10 @@ Global
 		{AE59B05A-CFD0-4D0A-A20C-072237E26FF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE59B05A-CFD0-4D0A-A20C-072237E26FF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE59B05A-CFD0-4D0A-A20C-072237E26FF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9806ECF0-A21F-4C82-A039-0AA833123FFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9806ECF0-A21F-4C82-A039-0AA833123FFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9806ECF0-A21F-4C82-A039-0AA833123FFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9806ECF0-A21F-4C82-A039-0AA833123FFE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
