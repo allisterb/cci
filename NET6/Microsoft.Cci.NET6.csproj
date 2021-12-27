@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6</TargetFramework>
+    <DefineConstants>TRACE;LITTLEENDIAN;COREFX_SUBSET;MERGED_DLL;ENABLE_PORTABLE_PDB</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.DiaSymReader" Version="1.4.0-beta2-21615-02" />
+    <PackageReference Include="Microsoft.DiaSymReader.PortablePdb" Version="1.6.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="System.Reflection.Metadata" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.DiaSymReader.Converter">
+      <HintPath>..\..\symreader-converter\artifacts\bin\Microsoft.DiaSymReader.Converter\Debug\net6.0\Microsoft.DiaSymReader.Converter.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <Import Project=".\Microsoft.Cci.Sources.targets" />
+  
+
+</Project>
