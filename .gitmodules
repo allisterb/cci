@@ -1,0 +1,3 @@
+[submodule "NET6/ext/symreader-converter"]
+	path = NET6/ext/symreader-converter
+	url = https://github.com/allisterb/symreader-converter.git
