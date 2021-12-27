@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "PeToText.NET6": {
+      "commandName": "Project",
+      "commandLineArgs": "\"C:\\Projects\\Grover\\src\\Grover.Base\\bin\\Debug\\net6.0\\Grover.Base.dll\""
+    }
+  }
+}
