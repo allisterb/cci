@@ -337,7 +337,7 @@ namespace Microsoft.Cci.Contracts {
         string pdbFile = Path.ChangeExtension(unit.Location, "pdb");
         if (File.Exists(pdbFile)) {
           using (var pdbStream = File.OpenRead(pdbFile)) {
-            this.pdbReader = new PdbReader(pdbStream, host);
+            this.pdbReader = new PdbReader(unit.Location, pdbFile, host, true); //Use portable PDB.
           }
         }
       }
