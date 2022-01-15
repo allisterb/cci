@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en" target-language="tr" original="../Resources.resx">
+    <body>
+      <trans-unit id="CantSpecifyBothExtractAndPdbOptions">
+        <source>Can't specify both /extract and /pdb options.</source>
+        <target state="translated">/extract ve /pdb seçeneklerinin ikisi birden belirtilemez.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CantSpecifyBothExtractAndSourcelinkOptions">
+        <source>Can't specify both /extract and /sourcelink options.</source>
+        <target state="translated">/extract ve /sourcelink seçeneklerinin ikisi birden belirtilemez.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="FileDoesntContainEmbeddedPdb">
+        <source>File '{0}' doesn't contain an embedded PDB.</source>
+        <target state="translated">'{0}' dosyası eklenmiş bir PDB içermiyor.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="FileNotFound">
+        <source>File not found: '{0}'</source>
+        <target state="translated">Dosya bulunamadı: '{0}'</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MissingValueForOption">
+        <source>Missing value for option '{0}'</source>
+        <target state="translated">'{0}' seçeneği için değer eksik</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="OnlyOneDllExeCanBeSpecified">
+        <source>Only one dll/exe can be specified</source>
+        <target state="translated">Yalnızca bir dll/exe belirtilebilir</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="UnrecognizedOption">
+        <source>Unrecognized option: '{0}'</source>
+        <target state="translated">Tanınmayan seçenek: '{0}'</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MissingDllExePath">
+        <source>Missing dll/exe path.</source>
+        <target state="translated">Dll/exe yolu eksik.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MatchingPdbNotFound">
+        <source>File '{0}' not found or doesn't match '{1}'.</source>
+        <target state="translated">'{0}' dosyası bulunamadı veya '{1}' ile eşleşmiyor.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="NoAssociatedOrEmbeddedPdb">
+        <source>File '{0}' is neither associated with PDB nor does it embed PDB.</source>
+        <target state="translated">'{0}' dosyası PDB’yle ilişkili değil ve eklenmiş PDB içermiyor.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Pdb2PdbUsage">
+        <source>Usage: Pdb2Pdb &lt;dll/exe path&gt; [/pdb &lt;path&gt;] [/out &lt;path&gt;] [/extract]
+
+/pdb &lt;path&gt;                Path to the PDB to convert. If not specified explicitly, 
+                           the PDB referenced by or embedded in the DLL/EXE is used.
+/out &lt;path&gt;                Output PDB path.
+/extract                   Extract PDB embedded in the DLL/EXE. 
+/sourcelink                When converting to Windows PDB do not convert SourceLink to srcsrv format.
+                           By default both SourceLink and srcsrv are included in the converted PDB.
+/nowarn *                  Suppress all warnings. All warnings are reported by default.
+/nowarn &lt;n1,n2,...&gt;        Suppress specified warning.
+/srcsvrvar &lt;name&gt;=&lt;value&gt;  Add specified variable to srcsvr stream. Only applicable 
+                           when converting to Windows PDB and /sourcelink is not
+                           specified.
+
+/extract and /pdb are mutually exclusive.
+</source>
+        <target state="translated">Kullanım: Pdb2Pdb &lt;dll/exe yolu&gt; [/pdb &lt;yol&gt;] [/out &lt;yol&gt;] [/extract]
+
+/pdb &lt;yol&gt;                Dönüştürülecek PDB’nin yolu. Açıkça belirtilmezse, 
+                           DLL/EXE tarafından başvurulan veya DLL/EXE’ye gömülü PDB kullanılır.
+/out &lt;yol&gt;                Çıkış PDB yolu.
+/extract                   DLL/EXE’ye gömülü PDB’yi ayıklayın. 
+/sourcelink                Windows PDB’ye dönüştürürken SourceLink’i srcsrv biçimine dönüştürmeyin.
+                           SourceLink ve srcsrv varsayılan olarak dönüştürülmüş PDB’ye dahildir.
+/nowarn *                  Tüm uyarıları gizleyin. Varsayılan olarak tüm uyarılar bildirilir.
+/nowarn &lt;n1,n2,...&gt;        Belirtilen uyarıyı gizleyin.
+/srcsvrvar &lt;name&gt;=&lt;value&gt;  Belirtilen değişkeni srcsvr akışına ekleyin. Yalnızca 
+                           Windows PDB’ye dönüştürürken ve /sourcelink belirtilmediğinde
+                           geçerlidir.
+
+/extract ve /pdb birbirini dışlar.
+</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="InvalidPdbPathInDebugDirectory">
+        <source>Invalid PDB path in Debug Directory (file '{0}').</source>
+        <target state="translated">Hata Ayıklama Dizininde ('{0}' dosyası) geçersiz PDB yolu.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CantSpecifyBothSrcSvrVariableAndSourcelinkOptions">
+        <source>Can't specify both /srcsvrvar and /sourcelink options.</source>
+        <target state="translated">/srcsvrvar ve /sourcelink seçenekleri birlikte belirtilemez.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="InvalidWarningNumber">
+        <source>Invalid warning number: '{0}'.</source>
+        <target state="translated">Geçersiz uyarı numarası: '{0}'.</target>
+        <note />
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

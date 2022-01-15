@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en" target-language="es" original="../Resources.resx">
+    <body>
+      <trans-unit id="CantSpecifyBothExtractAndPdbOptions">
+        <source>Can't specify both /extract and /pdb options.</source>
+        <target state="translated">No se puede especificar las dos opciones /extract y /pdb.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CantSpecifyBothExtractAndSourcelinkOptions">
+        <source>Can't specify both /extract and /sourcelink options.</source>
+        <target state="translated">No se puede especificar las dos opciones /extract y /sourcelink.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="FileDoesntContainEmbeddedPdb">
+        <source>File '{0}' doesn't contain an embedded PDB.</source>
+        <target state="translated">El archivo "{0}" no contiene un archivo PDB insertado.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="FileNotFound">
+        <source>File not found: '{0}'</source>
+        <target state="translated">No se encontró el archivo: "{0}".</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MissingValueForOption">
+        <source>Missing value for option '{0}'</source>
+        <target state="translated">Falta el valor para la opción "{0}".</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="OnlyOneDllExeCanBeSpecified">
+        <source>Only one dll/exe can be specified</source>
+        <target state="translated">Solo se puede especificar un dll/exe.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="UnrecognizedOption">
+        <source>Unrecognized option: '{0}'</source>
+        <target state="translated">Opción no reconocida: '{0}'.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MissingDllExePath">
+        <source>Missing dll/exe path.</source>
+        <target state="translated">Falta la ruta de acceso dll/exe.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MatchingPdbNotFound">
+        <source>File '{0}' not found or doesn't match '{1}'.</source>
+        <target state="translated">El archivo "{0}" no se encontró o no coincide con "{1}".</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="NoAssociatedOrEmbeddedPdb">
+        <source>File '{0}' is neither associated with PDB nor does it embed PDB.</source>
+        <target state="translated">El archivo "{0}" no está asociado con el archivo PDB o no inserta el archivo PDB.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Pdb2PdbUsage">
+        <source>Usage: Pdb2Pdb &lt;dll/exe path&gt; [/pdb &lt;path&gt;] [/out &lt;path&gt;] [/extract]
+
+/pdb &lt;path&gt;                Path to the PDB to convert. If not specified explicitly, 
+                           the PDB referenced by or embedded in the DLL/EXE is used.
+/out &lt;path&gt;                Output PDB path.
+/extract                   Extract PDB embedded in the DLL/EXE. 
+/sourcelink                When converting to Windows PDB do not convert SourceLink to srcsrv format.
+                           By default both SourceLink and srcsrv are included in the converted PDB.
+/nowarn *                  Suppress all warnings. All warnings are reported by default.
+/nowarn &lt;n1,n2,...&gt;        Suppress specified warning.
+/srcsvrvar &lt;name&gt;=&lt;value&gt;  Add specified variable to srcsvr stream. Only applicable 
+                           when converting to Windows PDB and /sourcelink is not
+                           specified.
+
+/extract and /pdb are mutually exclusive.
+</source>
+        <target state="translated">Uso: Pdb2Pdb &lt;ruta de acceso dll/exe&gt; [/pdb &lt;ruta de acceso&gt;] [/out &lt;ruta de acceso&gt;] [/extract]
+
+/pdb &lt;ruta de acceso&gt;                Ruta de acceso al archivo PDB que se debe convertir. Si no se especifica de forma explícita, 
+                           se usa el archivo PDB insertado o al que se hace referencia en el archivo DLL o EXE.
+/out &lt;ruta de acceso&gt;                Ruta de acceso del archivo PDB de salida.
+/extract                   Extrae el archivo PDB insertado en el archivo DLL o EXE. 
+/sourcelink                En la conversión a PDB de Windows, SourceLink no se convierte al formato srcsrv.
+                           De forma predeterminada, se incluyen los dos (SourceLink y srcsrv) en el archivo PDB convertido.
+/nowarn *                  Suprime todas las advertencias. Todas las advertencias se notifican de manera predeterminada.
+/nowarn &lt;n1,n2,...&gt;        Suprime la advertencia especificada.
+/srcsvrvar &lt;nombre&gt;=&lt;valor&gt;  Agrega la variable especificada al flujo srcsvr. Solo aplicable 
+                           al convertir a PDB de Windows y si /sourcelink no se ha
+                           especificado.
+
+/extract y /pdb se excluyen mutuamente.
+</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="InvalidPdbPathInDebugDirectory">
+        <source>Invalid PDB path in Debug Directory (file '{0}').</source>
+        <target state="translated">Ruta de acceso a PDB no válida en el directorio de depuración (archivo "{0}").</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CantSpecifyBothSrcSvrVariableAndSourcelinkOptions">
+        <source>Can't specify both /srcsvrvar and /sourcelink options.</source>
+        <target state="translated">No se pueden especificar las opciones /srcsvrvar y /sourcelink simultáneamente.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="InvalidWarningNumber">
+        <source>Invalid warning number: '{0}'.</source>
+        <target state="translated">Número de advertencia "{0}" no válido.</target>
+        <note />
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

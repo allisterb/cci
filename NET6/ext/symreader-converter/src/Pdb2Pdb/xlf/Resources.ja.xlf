@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en" target-language="ja" original="../Resources.resx">
+    <body>
+      <trans-unit id="CantSpecifyBothExtractAndPdbOptions">
+        <source>Can't specify both /extract and /pdb options.</source>
+        <target state="translated">/extract オプションと /pdb オプションの両方を指定することはできません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CantSpecifyBothExtractAndSourcelinkOptions">
+        <source>Can't specify both /extract and /sourcelink options.</source>
+        <target state="translated">/extract オプションと /sourcelink オプションの両方を指定することはできません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="FileDoesntContainEmbeddedPdb">
+        <source>File '{0}' doesn't contain an embedded PDB.</source>
+        <target state="translated">ファイル '{0}' には、埋め込み PDB が含まれていません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="FileNotFound">
+        <source>File not found: '{0}'</source>
+        <target state="translated">ファイルが見つかりません: '{0}'</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MissingValueForOption">
+        <source>Missing value for option '{0}'</source>
+        <target state="translated">オプション '{0}' の値がありません</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="OnlyOneDllExeCanBeSpecified">
+        <source>Only one dll/exe can be specified</source>
+        <target state="translated">指定できるのは dll/exe 1 つだけです</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="UnrecognizedOption">
+        <source>Unrecognized option: '{0}'</source>
+        <target state="translated">認識されないオプション:'{0}'</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MissingDllExePath">
+        <source>Missing dll/exe path.</source>
+        <target state="translated">dll/exe のパスが見つかりせん。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="MatchingPdbNotFound">
+        <source>File '{0}' not found or doesn't match '{1}'.</source>
+        <target state="translated">ファイル '{0}' が見つからないか、'{1}' と一致しません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="NoAssociatedOrEmbeddedPdb">
+        <source>File '{0}' is neither associated with PDB nor does it embed PDB.</source>
+        <target state="translated">ファイル '{0}' が PDB に関連付けられていないか、このファイルに PDB が埋め込まれていません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="Pdb2PdbUsage">
+        <source>Usage: Pdb2Pdb &lt;dll/exe path&gt; [/pdb &lt;path&gt;] [/out &lt;path&gt;] [/extract]
+
+/pdb &lt;path&gt;                Path to the PDB to convert. If not specified explicitly, 
+                           the PDB referenced by or embedded in the DLL/EXE is used.
+/out &lt;path&gt;                Output PDB path.
+/extract                   Extract PDB embedded in the DLL/EXE. 
+/sourcelink                When converting to Windows PDB do not convert SourceLink to srcsrv format.
+                           By default both SourceLink and srcsrv are included in the converted PDB.
+/nowarn *                  Suppress all warnings. All warnings are reported by default.
+/nowarn &lt;n1,n2,...&gt;        Suppress specified warning.
+/srcsvrvar &lt;name&gt;=&lt;value&gt;  Add specified variable to srcsvr stream. Only applicable 
+                           when converting to Windows PDB and /sourcelink is not
+                           specified.
+
+/extract and /pdb are mutually exclusive.
+</source>
+        <target state="translated">使い方: Pdb2Pdb &lt;dll/exe のパス&gt; [/pdb &lt;パス&gt;] [/out &lt;パス&gt;] [/extract]
+
+/pdb &lt;パス&gt;                変換する PDB へのパス。明示的に指定されない場合、DLL/EXE によって
+                           参照される、または DLL/EXE に組み込まれている PDB が使用されます。
+/out &lt;パス&gt;                出力 PDB パス。
+/extract                   DLL/EXE に組み込まれている PDB を抽出します。
+/sourcelink                Windows PDB に変換するときに、SourceLink を srcsrv 形式に変換しません。
+                           既定では SourceLink と srcsrv の両方が変換後の PDB に組み込まれます。
+/nowarn *                  すべての警告を非表示にします。既定ではすべての警告が報告されます。
+/nowarn &lt;n1,n2,...&gt;        特定の警告を非表示にします。
+/srcsvrvar &lt;名前&gt;=&lt;値&gt;  指定された変数を srcsvr ストリームに追加します。
+                           変換先が Windows PDB であり、かつ /sourcelink が指定されない場合
+                           にのみ適用できます。
+
+/extract と /pdb を同時に指定することはできません。
+</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="InvalidPdbPathInDebugDirectory">
+        <source>Invalid PDB path in Debug Directory (file '{0}').</source>
+        <target state="translated">デバッグ ディレクトリ (ファイル '{0}') の PDB パスが無効です。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CantSpecifyBothSrcSvrVariableAndSourcelinkOptions">
+        <source>Can't specify both /srcsvrvar and /sourcelink options.</source>
+        <target state="translated">/srcsvrvar オプションと /sourcelink オプションの両方を指定することはできません。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="InvalidWarningNumber">
+        <source>Invalid warning number: '{0}'.</source>
+        <target state="translated">警告番号 '{0}' が無効です。</target>
+        <note />
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
