@@ -74,35 +74,35 @@
     <Compile Include="$(CciSrc)\Converters\ILGenerator\ILRewriter.cs" />
     <Compile Include="$(CciSrc)\Converters\ILGenerator\MethodBody.cs" />
 
-    <Compile Include="$(CciSrc)\PdbReaderAndWriter\PdbReader\BitAccess.cs" />
-    <Compile Include="$(CciSrc)\PdbReaderAndWriter\PdbReader\BitSet.cs" />
-    <Compile Include="$(CciSrc)\PdbReaderAndWriter\PdbReader\CvInfo.cs" />
-    <Compile Include="$(CciSrc)\PdbReaderAndWriter\PdbReader\DataStream.cs" />
-    <Compile Include="$(CciSrc)\PdbReaderAndWriter\PdbReader\DbiDbgHdr.cs" />
-    <Compile Include="$(CciSrc)\PdbReaderAndWriter\PdbReader\DbiHeader.cs" />
-    <Compile Include="$(CciSrc)\PdbReaderAndWriter\PdbReader\DbiModuleInfo.cs" />
-    <Compile Include="$(CciSrc)\PdbReaderAndWriter\PdbReader\DbiSecCon.cs" />
-    <Compile Include="$(CciSrc)\PdbReaderAndWriter\PdbReader\IntHashTable.cs" />
-    <Compile Include="$(CciSrc)\PdbReaderAndWriter\PdbReader\MsfDirectory.cs" />
-    <Compile Include="$(CciSrc)\PdbReaderAndWriter\PdbReader\PdbConstant.cs" />
-    <Compile Include="$(CciSrc)\PdbReaderAndWriter\PdbReader\PdbDebugException.cs" />
-    <Compile Include="$(CciSrc)\PdbReaderAndWriter\PdbReader\PdbException.cs" />
-    <Compile Include="$(CciSrc)\PdbReaderAndWriter\PdbReader\PdbFile.cs" />
-    <Compile Include="$(CciSrc)\PdbReaderAndWriter\PdbReader\PdbFileHeader.cs" />
-    <Compile Include="$(CciSrc)\PdbReaderAndWriter\PdbReader\PdbFormatProvider.cs" Condition="'$(EnablePortablePdb)' == 'true'" />
-    <Compile Include="$(CciSrc)\PdbReaderAndWriter\PdbReader\PdbFunction.cs" />
-    <Compile Include="$(CciSrc)\PdbReaderAndWriter\PdbReader\PdbInfo.cs" />
-    <Compile Include="$(CciSrc)\PdbReaderAndWriter\PdbReader\PdbLine.cs" />
-    <Compile Include="$(CciSrc)\PdbReaderAndWriter\PdbReader\PdbLines.cs" />
-    <Compile Include="$(CciSrc)\PdbReaderAndWriter\PdbReader\PdbReader.cs" />
-    <Compile Include="$(CciSrc)\PdbReaderAndWriter\PdbReader\PdbScope.cs" />
-    <Compile Include="$(CciSrc)\PdbReaderAndWriter\PdbReader\PdbSlot.cs" />
-    <Compile Include="$(CciSrc)\PdbReaderAndWriter\PdbReader\PdbSource.cs" />
-    <Compile Include="$(CciSrc)\PdbReaderAndWriter\PdbReader\PdbTokenLine.cs" />
-    <Compile Include="$(CciSrc)\PdbReaderAndWriter\PdbReader\SourceLocationProvider.cs" />
+    <Compile Include="$(CciSrc)\PDBReaderAndWriter\PdbReader\BitAccess.cs" />
+    <Compile Include="$(CciSrc)\PDBReaderAndWriter\PdbReader\BitSet.cs" />
+    <Compile Include="$(CciSrc)\PDBReaderAndWriter\PdbReader\CvInfo.cs" />
+    <Compile Include="$(CciSrc)\PDBReaderAndWriter\PdbReader\DataStream.cs" />
+    <Compile Include="$(CciSrc)\PDBReaderAndWriter\PdbReader\DbiDbgHdr.cs" />
+    <Compile Include="$(CciSrc)\PDBReaderAndWriter\PdbReader\DbiHeader.cs" />
+    <Compile Include="$(CciSrc)\PDBReaderAndWriter\PdbReader\DbiModuleInfo.cs" />
+    <Compile Include="$(CciSrc)\PDBReaderAndWriter\PdbReader\DbiSecCon.cs" />
+    <Compile Include="$(CciSrc)\PDBReaderAndWriter\PdbReader\IntHashTable.cs" />
+    <Compile Include="$(CciSrc)\PDBReaderAndWriter\PdbReader\MsfDirectory.cs" />
+    <Compile Include="$(CciSrc)\PDBReaderAndWriter\PdbReader\PdbConstant.cs" />
+    <Compile Include="$(CciSrc)\PDBReaderAndWriter\PdbReader\PdbDebugException.cs" />
+    <Compile Include="$(CciSrc)\PDBReaderAndWriter\PdbReader\PdbException.cs" />
+    <Compile Include="$(CciSrc)\PDBReaderAndWriter\PdbReader\PdbFile.cs" />
+    <Compile Include="$(CciSrc)\PDBReaderAndWriter\PdbReader\PdbFileHeader.cs" />
+    <Compile Include="$(CciSrc)\PDBReaderAndWriter\PdbReader\PdbFormatProvider.cs" Condition="'$(EnablePortablePdb)' == 'true'" />
+    <Compile Include="$(CciSrc)\PDBReaderAndWriter\PdbReader\PdbFunction.cs" />
+    <Compile Include="$(CciSrc)\PDBReaderAndWriter\PdbReader\PdbInfo.cs" />
+    <Compile Include="$(CciSrc)\PDBReaderAndWriter\PdbReader\PdbLine.cs" />
+    <Compile Include="$(CciSrc)\PDBReaderAndWriter\PdbReader\PdbLines.cs" />
+    <Compile Include="$(CciSrc)\PDBReaderAndWriter\PdbReader\PdbReader.cs" />
+    <Compile Include="$(CciSrc)\PDBReaderAndWriter\PdbReader\PdbScope.cs" />
+    <Compile Include="$(CciSrc)\PDBReaderAndWriter\PdbReader\PdbSlot.cs" />
+    <Compile Include="$(CciSrc)\PDBReaderAndWriter\PdbReader\PdbSource.cs" />
+    <Compile Include="$(CciSrc)\PDBReaderAndWriter\PdbReader\PdbTokenLine.cs" />
+    <Compile Include="$(CciSrc)\PDBReaderAndWriter\PdbReader\SourceLocationProvider.cs" />
 
-    <Compile Include="$(CciSrc)\PdbReaderAndWriter\PdbWriter\ISymbolWriter.cs" />
-    <Compile Include="$(CciSrc)\PdbReaderAndWriter\PdbWriter\Writer.cs" />
+    <Compile Include="$(CciSrc)\PDBReaderAndWriter\PdbWriter\ISymbolWriter.cs" />
+    <Compile Include="$(CciSrc)\PDBReaderAndWriter\PdbWriter\Writer.cs" />
 
     <Compile Include="$(CciSrc)\PEReaderAndWriter\PEReader\AliasForTypeExtensions.cs" />
     <Compile Include="$(CciSrc)\PEReaderAndWriter\PEReader\Attributes.cs" />
