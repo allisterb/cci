@@ -4,7 +4,7 @@
     <TargetFramework>net6</TargetFramework>
     <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <DefineConstants>TRACE;LITTLEENDIAN;COREFX_SUBSET;MERGED_DLL;EnablePortablePdb;ENABLE_PORTABLE_PDB;NO_STRING_CTOR_FROM_PTR_AND_ENCODING</DefineConstants>
+    <DefineConstants>TRACE;LITTLEENDIAN;COREFX_SUBSET;MERGED_DLL;EnablePortablePdb;ENABLE_PORTABLE_PDB;NO_STRING_CTOR_FROM_PTR_AND_ENCODING;__MonoCS__</DefineConstants>
   </PropertyGroup>
 
  
