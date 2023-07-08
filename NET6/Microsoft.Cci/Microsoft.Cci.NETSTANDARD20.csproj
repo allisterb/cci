@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard20</TargetFramework>
+    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <DefineConstants>TRACE;LITTLEENDIAN;COREFX_SUBSET;MERGED_DLL;EnablePortablePdb;ENABLE_PORTABLE_PDB;NO_STRING_CTOR_FROM_PTR_AND_ENCODING;__MonoCS__</DefineConstants>
+	<NoWarn>0649</NoWarn> 
+  </PropertyGroup>
+
+ 
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.DiaSymReader.PortablePdb" Version="1.6.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="System.Reflection.Metadata" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ext\symreader-converter\src\Microsoft.DiaSymReader.Converter\Microsoft.DiaSymReader.Converter.NETSTANDARD20.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.DiaSymReader">
+      <HintPath>..\lib\Microsoft.DiaSymReader.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <Import Project=".\Microsoft.Cci.Sources.targets" />
+  
+
+</Project>

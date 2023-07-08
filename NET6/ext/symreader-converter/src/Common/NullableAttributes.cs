@@ -5,7 +5,7 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
-#if NETFRAMEWORK
+#if NETFRAMEWORK || NETSTANDARD
 
 namespace System.Diagnostics.CodeAnalysis
 {
