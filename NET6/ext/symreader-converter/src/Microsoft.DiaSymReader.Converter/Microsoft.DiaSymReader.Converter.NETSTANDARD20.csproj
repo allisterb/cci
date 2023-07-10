@@ -7,15 +7,13 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
 
-    <!-- NuGet -->
-    <IsPackable>true</IsPackable>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <Description>Converter between Windows PDB and Portable PDB formats.</Description>
-    <PackageReleaseNotes></PackageReleaseNotes>
-    <PackageTags>DiaSymReader ISymUnmanagedReader Portable PDB debugging conversion</PackageTags>
+    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+
     
     <!-- Workaround for https://github.com/dotnet/sdk/issues/11270 -->
     <GenerateDependencyFile>false</GenerateDependencyFile>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.PooledObjects" Version="$(MicrosoftCodeAnalysisPooledObjectsVersion)" PrivateAssets="all" />
@@ -29,10 +27,12 @@
       <HintPath>..\..\..\..\lib\Microsoft.DiaSymReader.dll</HintPath>
     </Reference>
   </ItemGroup>
+
   <ItemGroup>
     <InternalsVisibleTo Include="Microsoft.DiaSymReader.Converter.UnitTests" />
     <InternalsVisibleTo Include="Pdb2Pdb.UnitTests" />
   </ItemGroup>
+  
   <ItemGroup>
     <EmbeddedResource Update="ConverterResources.resx" GenerateSource="true" />
   </ItemGroup>
