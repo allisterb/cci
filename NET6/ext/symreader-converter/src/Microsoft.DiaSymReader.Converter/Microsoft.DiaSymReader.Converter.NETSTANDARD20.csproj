@@ -19,7 +19,7 @@
     <PackageReference Include="Microsoft.CodeAnalysis.PooledObjects" Version="$(MicrosoftCodeAnalysisPooledObjectsVersion)" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.Debugging" Version="$(MicrosoftCodeAnalysisDebuggingVersion)" PrivateAssets="all" />
     <PackageReference Include="Microsoft.DiaSymReader.Native" Version="$(MicrosoftDiaSymReaderNativeVersion)" />
-    <PackageReference Include="Microsoft.SourceLink.Tools" Version="1.1.1" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.SourceLink.Tools" Version="1.2.*-*" PrivateAssets="all" />
     <PackageReference Include="System.Collections.Immutable" Version="$(SystemCollectionsImmutableVersion)" />
     <PackageReference Include="System.Reflection.Metadata" Version="$(SystemReflectionMetadataVersion)" />
     <PackageReference Include="System.Text.Json" Version="$(SystemTextJsonVersion)" />
