@@ -3854,6 +3854,8 @@ namespace Microsoft.Cci.MetadataReader {
           return this.PEFileToObjectModel.PlatformType.SystemObject;
         case ElementType.String:
           return this.PEFileToObjectModel.PlatformType.SystemString;
+        case ElementType.TypedReference:
+          return this.PEFileToObjectModel.PlatformType.SystemTypedReference;
         case ElementType.ByReference:
           return this.GetModuleManagedPointerType(0xFFFFFFFF);
         case ElementType.Pointer:
