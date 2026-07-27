@@ -6,6 +6,9 @@ using System;
 
 namespace Microsoft.Cci.MetadataReader.Extensions
 {
+    /// <summary>
+    /// 
+    /// </summary>
   public static class AliasForTypeExtensions
   {
     /// <summary>

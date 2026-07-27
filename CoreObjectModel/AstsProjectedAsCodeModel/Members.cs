@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -1462,7 +1462,7 @@ namespace Microsoft.Cci.Ast {
             this.type = Immutable.ModifiedTypeReference.GetModifiedTypeReference(this.FieldDeclaration.Type.ResolvedType,
               IteratorHelper.GetSingletonEnumerable(volatileModifier), this.fieldDeclaration.Compilation.HostEnvironment.InternFactory);
           } else
-            this.type = this.FieldDeclaration.Type.ResolvedType;
+            return this.FieldDeclaration.Type.ResolvedType;
         }
         return this.type;
       }
@@ -3400,7 +3400,7 @@ namespace Microsoft.Cci.Ast {
     /// </summary>
     /// <value></value>
     public bool IsConstructor {
-      get { return this.Name.Value.Equals(".ctor"); } //  TODO: Implement this properly
+      get { return !IsStatic && this.Name.UniqueKey == Declaration.CompilationPart.Compilation.NameTable.Ctor.UniqueKey; }
     }
 
     /// <summary>
@@ -3408,7 +3408,7 @@ namespace Microsoft.Cci.Ast {
     /// </summary>
     /// <value></value>
     public bool IsStaticConstructor {
-      get { return this.Name.Value.Equals(".cctor"); }  //  TODO: Implement this properly
+      get { return IsStatic && this.Name.UniqueKey == Declaration.CompilationPart.Compilation.NameTable.Cctor.UniqueKey; }
     }
 
     /// <summary>
@@ -3922,7 +3922,7 @@ namespace Microsoft.Cci.Ast {
     /// True if the referenced method or property does not require an instance of its declaring type as its first argument.
     /// </summary>
     public bool IsStatic {
-      get { return true; }
+      get { return this.declaration.IsStatic; }
     }
 
     #endregion

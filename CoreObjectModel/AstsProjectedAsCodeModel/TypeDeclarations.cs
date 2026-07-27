@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -681,6 +681,8 @@ namespace Microsoft.Cci.Ast {
     /// care not to call any other methods or property/event accessors on the object until after this method has been called.
     /// </summary>
     public override void SetContainingNamespaceDeclaration(NamespaceDeclaration containingNamespaceDeclaration, bool recurse) {
+      ResetDummyBlockIfNecessary(containingNamespaceDeclaration);
+      ResetOuterDummyBlockIfNecessary(containingNamespaceDeclaration);
       base.SetContainingNamespaceDeclaration(containingNamespaceDeclaration, recurse);
       this.Signature.SetContainingBlock(this.DummyBlock);
     }
@@ -801,6 +803,8 @@ namespace Microsoft.Cci.Ast {
     /// <param name="containingNamespaceDeclaration"></param>
     /// <param name="recurse"></param>
     public override void SetContainingNamespaceDeclaration(NamespaceDeclaration containingNamespaceDeclaration, bool recurse) {
+      ResetDummyBlockIfNecessary(containingNamespaceDeclaration);
+      ResetOuterDummyBlockIfNecessary(containingNamespaceDeclaration);
       TypeExpression/*?*/ thisType = this.UnderlyingType;
       if (thisType == null) thisType = TypeExpression.For(containingNamespaceDeclaration.Helper.PlatformType.SystemInt32.ResolvedType);
       NameDeclaration value__ = new NameDeclaration(containingNamespaceDeclaration.Helper.NameTable.GetNameFor("value__"), SourceDummy.SourceLocation);
@@ -1107,6 +1111,21 @@ namespace Microsoft.Cci.Ast {
     //^ [Once]
     private BlockStatement/*?*/ dummyBlock;
 
+    /// <summary>
+    /// Reset a block that is the containing block for any expressions contained inside the type declaration
+    /// but not inside of a method if necessary.
+    /// </summary>
+    /// <value></value>
+    protected void ResetDummyBlockIfNecessary(NamespaceDeclaration containingNamespaceDeclaration) {
+      if (this.dummyBlock != null && this.dummyBlock.ContainingNamespaceDeclaration != containingNamespaceDeclaration) {
+        lock (this) {
+          if (this.dummyBlock != null && this.dummyBlock.ContainingNamespaceDeclaration != containingNamespaceDeclaration) {
+            this.dummyBlock = null;
+          }
+        }
+      }
+    }
+
     private NamespaceTypeDefinition GetOrCreateType() {
       foreach (INamespaceMember member in this.ContainingNamespaceDeclaration.UnitNamespace.GetMembersNamed(this.Name, false)) {
         NamespaceTypeDefinition/*?*/ nt = member as NamespaceTypeDefinition;
@@ -1180,7 +1199,8 @@ namespace Microsoft.Cci.Ast {
         BlockStatement/*?*/ outerDummyBlock = this.outerDummyBlock;
         if (outerDummyBlock == null) {
           lock (GlobalLock.LockingObject) {
-            if (this.outerDummyBlock == null) {
+            outerDummyBlock = this.outerDummyBlock;
+            if (outerDummyBlock == null) {
               this.outerDummyBlock = outerDummyBlock = BlockStatement.CreateDummyFor(this.SourceLocation);
               outerDummyBlock.SetContainers(this.ContainingNamespaceDeclaration.DummyBlock, this);
             }
@@ -1192,11 +1212,29 @@ namespace Microsoft.Cci.Ast {
     BlockStatement/*?*/ outerDummyBlock;
 
     /// <summary>
+    /// Reset a block that serves as the container for expressions that are not contained inside this type declaration, but that are part of the
+    /// signature of this type declaration (for example a base class reference) if necessary. The block scope includes the type parameters of this type
+    /// declaration.
+    /// </summary>
+    /// <value></value>
+    protected void ResetOuterDummyBlockIfNecessary(NamespaceDeclaration containingNamespaceDeclaration) {
+      if (outerDummyBlock != null && outerDummyBlock.ContainingNamespaceDeclaration != containingNamespaceDeclaration) {
+        lock (GlobalLock.LockingObject) {
+          if (outerDummyBlock != null && outerDummyBlock.ContainingNamespaceDeclaration != containingNamespaceDeclaration) {
+            this.outerDummyBlock = null;
+          }
+        }
+      }
+    }
+
+    /// <summary>
     /// Completes the two stage construction of this object. This allows bottom up parsers to construct a namespace type before constructing the namespace.
     /// This method should be called once only and must be called before this object is made available to client code. The construction code itself should also take
     /// care not to call any other methods or property/event accessors on the object until after this method has been called.
     /// </summary>
     public virtual void SetContainingNamespaceDeclaration(NamespaceDeclaration containingNamespaceDeclaration, bool recurse) {
+      ResetDummyBlockIfNecessary(containingNamespaceDeclaration);
+      ResetOuterDummyBlockIfNecessary(containingNamespaceDeclaration);
       this.containingNamespaceDeclaration = containingNamespaceDeclaration;
       this.OuterDummyBlock.SetContainers(containingNamespaceDeclaration.DummyBlock, this);
       this.SetCompilationPart(containingNamespaceDeclaration.CompilationPart, recurse);
@@ -1426,6 +1464,8 @@ namespace Microsoft.Cci.Ast {
     /// <param name="containingTypeDeclaration">The type declaration that contains this nested type declaration.</param>
     /// <param name="recurse">True if the construction of the children of this node need to be completed as well.</param>
     public override void SetContainingTypeDeclaration(TypeDeclaration containingTypeDeclaration, bool recurse) {
+      ResetDummyBlockIfNecessary(containingTypeDeclaration);
+      ResetOuterDummyBlockIfNecessary(containingTypeDeclaration);
       base.SetContainingTypeDeclaration(containingTypeDeclaration, recurse);
       this.Signature.SetContainingBlock(this.DummyBlock);
     }
@@ -1841,10 +1881,25 @@ namespace Microsoft.Cci.Ast {
     //^ [Once]
     private BlockStatement/*?*/ dummyBlock;
 
+    /// <summary>
+    /// Reset block that is the containing block for any expressions contained inside the type declaration
+    /// but not inside of a method, if necessary
+    /// </summary>
+    /// <value></value>
+    protected void ResetDummyBlockIfNecessary(TypeDeclaration containingTypeDeclaration) {
+      if (dummyBlock != null && dummyBlock.ContainingTypeDeclaration != containingTypeDeclaration) {
+        lock(this) {
+          if (dummyBlock != null && dummyBlock.ContainingTypeDeclaration != containingTypeDeclaration) {
+            dummyBlock = null;
+          }
+        }
+      }
+    }
+
     private NestedTypeDefinition CreateNestedTypeAndUpdateBackingField() {
       var containingTypeDef = this.ContainingTypeDeclaration.TypeDefinition;
       if (this.nestedTypeDefinition != null) {
-        //Could have happened as a side-effect of contructing the containing type definition.
+        //Could have happened as a side-effect of constructing the containing type definition.
         //Typically this only happens if the nested type declaration is asked about its type definition 
         //before the containing type declaration is asked about its type definition.
         return this.nestedTypeDefinition;
@@ -1853,7 +1908,9 @@ namespace Microsoft.Cci.Ast {
         foreach (ITypeDeclarationMember member in containingTypeDeclaration.TypeDeclarationMembers) {
           if (member == this) continue;
           NestedTypeDeclaration/*?*/ nt = member as NestedTypeDeclaration;
-          if (nt != null && nt.Name.UniqueKey == this.Name.UniqueKey && nt.GenericParameterCount == this.GenericParameterCount) {
+          if (nt != null && nt.Name.UniqueKey == this.Name.UniqueKey && nt.GenericParameterCount == this.GenericParameterCount &&
+              //Allow duplicate named declarations in source documents as an editable error, but don't register them with the definition.
+              nt.SourceLocation.SourceDocument != this.SourceLocation.SourceDocument) {
             nt.TypeDefinition.AddTypeDeclaration(this);
             return nt.NestedTypeDefinition;
           }
@@ -1914,8 +1971,11 @@ namespace Microsoft.Cci.Ast {
       get {
         if (this.nestedTypeDefinition == null) {
           lock (GlobalLock.LockingObject) {
-            if (this.nestedTypeDefinition == null)
-              this.CreateNestedTypeAndUpdateBackingField(); //the backing field is updated before returning, in order to short-circuit recursive call backs.
+            if (this.nestedTypeDefinition == null) {
+              NestedTypeDefinition notBacked = this.CreateNestedTypeAndUpdateBackingField(); //the backing field is updated before returning, in order to short-circuit recursive call backs.
+              if (this.nestedTypeDefinition == null)
+                return notBacked;
+            }
           }
         }
         return this.nestedTypeDefinition;
@@ -1945,6 +2005,22 @@ namespace Microsoft.Cci.Ast {
     BlockStatement/*?*/ outerDummyBlock;
 
     /// <summary>
+    /// Reset a block that serves as the container for expressions that are not contained inside this type declaration, but that are part of the
+    /// signature of this type declaration (for example a base class reference) if necessary. The block scope includes the type parameters of this type
+    /// declaration.
+    /// </summary>
+    /// <value></value>
+    protected void ResetOuterDummyBlockIfNecessary(TypeDeclaration containingTypeDeclaration) {
+      if (outerDummyBlock != null && outerDummyBlock.ContainingTypeDeclaration != containingTypeDeclaration) {
+        lock(GlobalLock.LockingObject) {
+          if (outerDummyBlock != null && outerDummyBlock.ContainingTypeDeclaration != containingTypeDeclaration) {
+            outerDummyBlock = null;
+          }
+        }
+      }
+    }
+
+    /// <summary>
     /// Completes the two stage construction of this object. This allows bottom up parsers to construct a type member before constructing the containing type declaration.
     /// This method should be called once only and must be called before this object is made available to client code. The construction code itself should also take
     /// care not to call any other methods or property/event accessors on the object until after this method has been called.
@@ -1952,6 +2028,8 @@ namespace Microsoft.Cci.Ast {
     /// <param name="containingTypeDeclaration">The type declaration that contains this nested type declaration.</param>
     /// <param name="recurse">True if the construction of the children of this node need to be completed as well.</param>
     public virtual void SetContainingTypeDeclaration(TypeDeclaration containingTypeDeclaration, bool recurse) {
+      ResetDummyBlockIfNecessary(containingTypeDeclaration);
+      ResetOuterDummyBlockIfNecessary(containingTypeDeclaration);
       this.containingTypeDeclaration = containingTypeDeclaration;
       this.OuterDummyBlock.SetContainers(containingTypeDeclaration.DummyBlock, this);
       this.SetCompilationPart(containingTypeDeclaration.CompilationPart, recurse);
@@ -2048,6 +2126,7 @@ namespace Microsoft.Cci.Ast {
   /// <summary>
   /// Corresponds to a source language type declaration, such as a C# partial class. One of more of these make up a type definition. 
   /// </summary>
+  [DebuggerDisplay("{GetType().FullName}")]
   public abstract class TypeDeclaration : SourceItemWithAttributes, IContainer<IAggregatableTypeDeclarationMember>, IContainer<ITypeDeclarationMember>, IDeclaration, INamedEntity, IErrorCheckable {
     /// <summary>
     /// A collection of flags that correspond to modifiers such as public and abstract.
@@ -2512,7 +2591,7 @@ namespace Microsoft.Cci.Ast {
       if (this.genericParameters != null)
         foreach (GenericTypeParameterDeclaration genericParameter in this.genericParameters) genericParameter.SetContainingExpression(containingExpression);
       foreach (TypeExpression baseType in this.baseTypes) baseType.SetContainingExpression(containingExpression);
-      foreach (ITypeDeclarationMember member in this.typeDeclarationMembers) this.SetMemberContainingTypeDeclaration(member);
+      foreach (ITypeDeclarationMember member in this.typeDeclarationMembers) this.TrySetMemberContainingTypeDeclaration(member);
       TypeContract/*?*/ typeContract = this.Compilation.ContractProvider.GetTypeContractFor(this) as TypeContract;
       if (typeContract != null) typeContract.SetContainingType(this);
     }
@@ -2521,17 +2600,18 @@ namespace Microsoft.Cci.Ast {
     /// 
     /// </summary>
     /// <param name="member"></param>
-    public virtual void SetMemberContainingTypeDeclaration(ITypeDeclarationMember member) {
+    public virtual bool TrySetMemberContainingTypeDeclaration(ITypeDeclarationMember member) {
       TypeDeclarationMember/*?*/ tmem = member as TypeDeclarationMember;
       if (tmem != null) {
         tmem.SetContainingTypeDeclaration(this, true);
-        return;
+        return true;
       }
       NestedTypeDeclaration/*?*/ ntdecl = member as NestedTypeDeclaration;
       if (ntdecl != null) {
         ntdecl.SetContainingTypeDeclaration(this, true);
-        return;
+        return true;
       }
+      return false;
     }
 
     /// <summary>

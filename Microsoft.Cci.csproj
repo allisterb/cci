@@ -1,9 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="15.0">
   <Import Project="..\dir.settings.targets" Condition="Exists('..\dir.settings.targets')" />
   <PropertyGroup>
     <!-- Make sure building in VS get chk by default -->
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <TargetFrameworkProfile />
     <Platform>AnyCPU</Platform>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ProjectGuid>{319E151C-8F33-49E7-81C9-30F02F9BA8BB}</ProjectGuid>
@@ -13,10 +14,17 @@
     <DefineConstants>TRACE;LITTLEENDIAN;COREFX_SUBSET;MERGED_DLL</DefineConstants>
     <SignAssembly>true</SignAssembly>
     <NoWarn>$(NoWarn);649</NoWarn>
-</PropertyGroup>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <RestoreSources>
+      $(RestoreSources);
+      https://api.nuget.org/v3/index.json;
+      <!-- DiaSymReader, DiaSymReader.Converter -->
+      https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-tools/nuget/v3/index.json
+    </RestoreSources>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug_GitHub|AnyCPU' ">
-    <TargetFrameworkIdentifier>.NETStandard</TargetFrameworkIdentifier>
-    <TargetFrameworkVersion>v1.3</TargetFrameworkVersion>
+    <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <DefineConstants>$(DefineConstants);NO_STRING_CTOR_FROM_PTR_AND_ENCODING</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoWarn>$(NoWarn);618</NoWarn>
@@ -30,8 +38,8 @@
     <UseInternalPortablePdbPaths>false</UseInternalPortablePdbPaths>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release_GitHub|AnyCPU' ">
-    <TargetFrameworkIdentifier>.NETStandard</TargetFrameworkIdentifier>
-    <TargetFrameworkVersion>v1.3</TargetFrameworkVersion>
+    <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <DefineConstants>$(DefineConstants);NO_STRING_CTOR_FROM_PTR_AND_ENCODING</DefineConstants>
     <NoWarn>$(NoWarn);618</NoWarn>
     <NoStdLib>true</NoStdLib>
@@ -52,35 +60,26 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|amd64' ">
   </PropertyGroup>
   <PropertyGroup Condition="'$(UseInternalPortablePdbPaths)' != 'false'">
-    <PortablePdbConverterPath>$(MSBuildThisFileDirectory)..\..\..\ExternalAPIs\PortablePDB</PortablePdbConverterPath>
+    <!--<PortablePdbConverterPath>$(MSBuildThisFileDirectory)..\..\..\ExternalAPIs\PortablePDB</PortablePdbConverterPath>
     <SupportAssemblyPath>$(MSBuildThisFileDirectory)..\..\..\InternalAPIs\pntoolchain\nuget</SupportAssemblyPath>
     <AssemblySearchPaths>$(AssemblySearchPaths);$(SupportAssemblyPath)</AssemblySearchPaths>
     <AssemblySearchPaths>$(AssemblySearchPaths);$(PortablePdbConverterPath)</AssemblySearchPaths>
-    <AssemblySearchPaths>$(AssemblySearchPaths);$(MSBuildThisFileDirectory)..\..\..\ExternalAPIs\NetFX\.NETFramework\v4.5\Facades</AssemblySearchPaths>
+    <AssemblySearchPaths>$(AssemblySearchPaths);$(MSBuildThisFileDirectory)..\..\..\ExternalAPIs\NetFX\.NETFramework\v4.5\Facades</AssemblySearchPaths>-->
     <DefineConstants>ENABLE_PORTABLE_PDB;$(DefineConstants)</DefineConstants>
     <EnablePortablePdb>true</EnablePortablePdb>
   </PropertyGroup>
   <ItemGroup Condition=" '$(TargetFrameworkIdentifier)' != '.NETStandard' ">
-    <Reference Include="mscorlib" />
     <Reference Include="System" />
-    <Reference Include="System.Core" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(EnablePortablePdb)' == 'true'">
-    <Reference Include="System.Collections.Immutable" />
     <Reference Include="System.IO" />
-    <Reference Include="System.Reflection.Metadata" />
-    <Reference Include="System.Runtime" />
-    <ReferencePath Include="$(SupportAssemblyPath)\Microsoft.DiaSymReader.dll" />
-    <Reference Include="Microsoft.DiaSymReader.Converter">
-      <Aliases>DiaSymReaderPdbConverter</Aliases>
-    </Reference>
   </ItemGroup>
   <ItemGroup Condition="'$(EnablePortablePdb)' == 'true'">
-    <Content Include="$(PortablePdbConverterPath)\Microsoft.DiaSymReader.Converter.dll" />
-    <Content Include="$(PortablePdbConverterPath)\System.ValueTuple.dll" />
-    <Content Include="$(SupportAssemblyPath)\System.Immutable.Collections.dll" />
-    <Content Include="$(SupportAssemblyPath)\System.Reflection.Metadata.dll" />
-    <Content Include="$(SupportAssemblyPath)\Microsoft.DiaSymReader.dll" />
+    <PackageReference Include="System.Collections.Immutable" Version="6.0.0"/>
+    <PackageReference Include="System.Reflection.Metadata" Version="6.0.1" />
+    <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
+    <PackageReference Include="Microsoft.DiaSymReader" Version="2.0.0-beta-22213-03" />
+    <PackageReference Include="Microsoft.DiaSymReader.Converter" Version="1.1.0-beta2-22415-02" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(EnablePortablePdb)' == 'true'">
   </ItemGroup>
   <Import Project=".\Microsoft.Cci.Sources.targets" />
   <Import Project="..\dir.targets" Condition="Exists('..\dir.targets')" />
@@ -93,8 +92,5 @@
   <ItemGroup>
     <!-- We want the sources to show up nicely in VS-->
     <VSSources Include="@(Compile)" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="project.json" />
   </ItemGroup>
 </Project>

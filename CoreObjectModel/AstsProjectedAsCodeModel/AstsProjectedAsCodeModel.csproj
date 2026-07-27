@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{15FF2982-EBD1-45DC-8FDF-4D901236E3D9}</ProjectGuid>
+    <ProjectGuid>{E57D6CFB-24FB-48DB-931F-0AEEE67454E7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Microsoft.Cci.Ast</RootNamespace>
@@ -23,7 +23,7 @@
     <OldToolsVersion>2.0</OldToolsVersion>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <TargetFrameworkProfile />
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -54,7 +54,6 @@
     <NoWarn>
     </NoWarn>
     <RunCodeAnalysis>false</RunCodeAnalysis>
-    <CodeAnalysisRuleSet>Migrated rules for AstsProjectedAsCodeModel.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules />
     <CodeContractsEnableRuntimeChecking>False</CodeContractsEnableRuntimeChecking>
     <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
@@ -127,40 +126,6 @@
     <Compile Include="Units.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Converters\ILGenerator\ILGenerator.csproj">
-      <Project>{08156C78-403A-4112-AD81-8646AC51CD2F}</Project>
-      <Name>ILGenerator</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MetadataHelper\MetadataHelper.csproj">
-      <Project>{4A34A3C5-6176-49D7-A4C5-B2B671247F8F}</Project>
-      <Name>MetadataHelper</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MetadataModel\MetadataModel.csproj">
-      <Project>{33CAB640-0D03-43DF-81BD-22CDC6C0A597}</Project>
-      <Name>MetadataModel</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MutableMetadataModel\MutableMetadataModel.csproj">
-      <Project>{319E151C-8F33-49E7-81C9-30F02F9BA90A}</Project>
-      <Name>MutableMetadataModel</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SourceModel\SourceModel.csproj">
-      <Project>{4B0054FD-124A-4037-9965-BDB55E6BF389}</Project>
-      <Name>SourceModel</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Converters\CodeModelToIL\CodeModelToIL.csproj">
-      <Project>{CEB76EA1-A168-49B0-A410-2C4195FEE86F}</Project>
-      <Name>CodeModelToIL</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CodeModel\CodeModel.csproj">
-      <Project>{035FEA7F-0D36-4AE4-B694-EC45191B9AF2}</Project>
-      <Name>CodeModel</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MutableCodeModel\MutableCodeModel.csproj">
-      <Project>{319E150C-8F33-49E7-81CA-30F02F9BA90A}</Project>
-      <Name>MutableCodeModel</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
@@ -184,6 +149,44 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Converters\CodeModelToIL\CodeModelToIL.csproj">
+      <Project>{53cef5c4-dbb9-42ef-80ae-0ecb10e593e6}</Project>
+      <Name>CodeModelToIL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Converters\ILGenerator\ILGenerator.csproj">
+      <Project>{0ec2771a-1599-466b-af15-868814c89df8}</Project>
+      <Name>ILGenerator</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\PEReaderAndWriter\PEReader\PeReader.csproj">
+      <Project>{fad2dee7-0787-45fa-8310-8dc92327a6ed}</Project>
+      <Name>PeReader</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CodeModel\CodeModel.csproj">
+      <Project>{923063f2-afd8-4513-b905-8427c6f46b60}</Project>
+      <Name>CodeModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MetadataHelper\MetadataHelper.csproj">
+      <Project>{4f6a005a-348a-4926-92ac-aa1d27406b2d}</Project>
+      <Name>MetadataHelper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MetadataModel\MetadataModel.csproj">
+      <Project>{98f3001e-3ebf-4a39-b692-98038df6b1ad}</Project>
+      <Name>MetadataModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MutableCodeModel\MutableCodeModel.csproj">
+      <Project>{0aed3980-037f-4a2d-91d7-1ccc47f55e6d}</Project>
+      <Name>MutableCodeModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MutableMetadataModel\MutableMetadataModel.csproj">
+      <Project>{c327c4ff-36d4-46b0-a0e2-ffe1d25d552c}</Project>
+      <Name>MutableMetadataModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SourceModel\SourceModel.csproj">
+      <Project>{1909ddfb-fcb1-444b-8dbe-1b0f43051509}</Project>
+      <Name>SourceModel</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

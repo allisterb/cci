@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Collections.Generic;
@@ -7,19 +7,23 @@ using System.Collections.Generic;
 
 namespace Microsoft.Cci.Ast {
   /// <summary>
+  /// A member declaration whose "type" is described by an expression.
+  /// </summary>
+  public interface ITypedMemberDeclaration : ISourceItem { 
+    /// <summary>
+    /// An expression that denotes the return type of a method, the type of a property, the delegate type of an event, or the stored type of a field.
+    /// </summary>
+    TypeExpression Type { get; }
+  }
+  /// <summary>
   /// The parameters and return type that makes up a method or property signature.
   /// This interface models the source representation of a signature.
   /// </summary>
-  public interface ISignatureDeclaration : ISourceItem {
+  public interface ISignatureDeclaration : ITypedMemberDeclaration {
     /// <summary>
     /// The parameters forming part of this signature.
     /// </summary>
     IEnumerable<ParameterDeclaration> Parameters { get; }
-
-    /// <summary>
-    /// An expression that denotes the return type of the method or type of the property.
-    /// </summary>
-    TypeExpression Type { get; }
 
     /// <summary>
     /// The symbol table object that represents the metadata for this signature.

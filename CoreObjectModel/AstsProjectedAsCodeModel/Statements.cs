@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Collections.Generic;
@@ -836,7 +836,7 @@ namespace Microsoft.Cci.Ast {
     public BlockStatement Body {
       get { return this.body; }
     }
-    readonly BlockStatement body;
+    BlockStatement body;
 
     /// <summary>
     /// Performs any error checks still needed and returns true if any errors were found in the statement or a constituent part of the statement.
@@ -870,7 +870,7 @@ namespace Microsoft.Cci.Ast {
     public ILocalDefinition ExceptionContainer {
       get {
         if (this.exceptionContainer == null) {
-          LocalDefinition exceptionContainer = this.GetNewExceptionContainer();
+          ILocalDefinition exceptionContainer = this.GetNewExceptionContainer();
           lock (this) {
             if (this.exceptionContainer == null) this.exceptionContainer = exceptionContainer;
           }
@@ -900,7 +900,7 @@ namespace Microsoft.Cci.Ast {
     /// <summary>
     /// Allocates the local that contains the exception instance when executing the catch clause body.
     /// </summary>
-    private LocalDefinition GetNewExceptionContainer() {
+    protected virtual ILocalDefinition GetNewExceptionContainer() {
       List<LocalDeclaration> declarations = new List<LocalDeclaration>(1);
       LocalDeclarationsStatement localDeclarationsStatement = new LocalDeclarationsStatement(false, true, false, this.ExceptionType, declarations, this.Name.SourceLocation);
       LocalDeclaration localDeclaration = new LocalDeclaration(false, false, this.Name, null, this.Name.SourceLocation);
@@ -938,7 +938,7 @@ namespace Microsoft.Cci.Ast {
     /// care not to call any other methods or property/event accessors on the object until after this method has been called.
     /// </summary>
     public virtual void SetContainingBlock(BlockStatement containingBlock) {
-      this.Body.SetContainingBlock(containingBlock);
+      body = (BlockStatement)body.MakeCopyFor(containingBlock);
       DummyExpression containingExpression = new DummyExpression(containingBlock, SourceDummy.SourceLocation);
       this.ExceptionType.SetContainingExpression(containingExpression);
     }
@@ -2220,13 +2220,28 @@ namespace Microsoft.Cci.Ast {
     /// <param name="step"></param>
     /// <param name="body"></param>
     /// <param name="sourceLocation"></param>
-    public ForRangeStatement(TypeExpression/*?*/ variableTypeExpression, SimpleName variableName, Range range, Expression/*?*/ step, Statement body, ISourceLocation sourceLocation)
+    public ForRangeStatement(TypeExpression/*?*/ variableTypeExpression, Expression variableName, Range range, Expression/*?*/ step, Statement body, ISourceLocation sourceLocation)
       : base(sourceLocation) {
       this.variableTypeExpression = variableTypeExpression;
       this.variableName = variableName;
       this.range = range;
       this.step = step;
       this.body = body;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    protected ForRangeStatement(BlockStatement blockStatement, ForRangeStatement template)
+      : base(blockStatement, template)
+    {
+      this.variableTypeExpression = template.VariableTypeExpression is TypeExpression ?
+        (TypeExpression)template.VariableTypeExpression.MakeCopyFor(blockStatement) : null;
+      this.variableName = template.VariableName != null ?
+        template.VariableName.MakeCopyFor(blockStatement) : null;
+      this.range = (Range)template.Range.MakeCopyFor(blockStatement);
+      this.step = template.Step != null ? template.Step.MakeCopyFor(blockStatement) : null;
+      this.body = template.Body.MakeCopyFor(blockStatement);
     }
 
     /// <summary>
@@ -2339,10 +2354,10 @@ namespace Microsoft.Cci.Ast {
     /// <summary>
     /// The for range loop variable that holds the number from the range.
     /// </summary>
-    public SimpleName VariableName {
+    public Expression/*?*/ VariableName {
       get { return this.variableName; }
     }
-    readonly SimpleName variableName;
+    readonly Expression/*?*/ variableName;
 
     /// <summary>
     /// 

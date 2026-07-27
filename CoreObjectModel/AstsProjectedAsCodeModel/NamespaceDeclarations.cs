@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Collections.Generic;
@@ -382,7 +382,7 @@ namespace Microsoft.Cci.Ast {
       if (candidates != null)
         // Now filter them for applicability with the given argument list
         foreach (IMethodDefinition method in candidates)
-          if (this.Helper.MethodIsEligible(method, arguments))
+          if (this.Helper.MethodIsEligible(method, arguments, false))
             result.Add(method);      
     }
 
@@ -419,7 +419,7 @@ namespace Microsoft.Cci.Ast {
       if (candidates != null)
         // Now filter the methods for applicability.
         foreach (IMethodDefinition method in candidates)
-          if (this.Helper.MethodIsEligible(method, arguments))
+          if (this.Helper.MethodIsEligible(method, arguments, false))
             result.Add(method);
     }
 
@@ -560,7 +560,11 @@ namespace Microsoft.Cci.Ast {
     public IEnumerable<INamespaceDeclarationMember> Members {
       get {
         if (this.cachedMembers == null)
-          this.cachedMembers = this.ComputeCachedMemberList();
+          lock(GlobalLock.LockingObject)
+          {
+             if (this.cachedMembers == null)
+               this.cachedMembers = this.ComputeCachedMemberList();
+          }
         return this.cachedMembers;
       }
     }
@@ -1224,6 +1228,13 @@ namespace Microsoft.Cci.Ast {
     }
 
     /// <summary>
+    /// Calls the visitor.Visit(NestedNamespaceDeclaration) method.
+    /// </summary>
+    public override void Dispatch(SourceVisitor visitor) {
+      visitor.Visit(this);
+    }
+
+    /// <summary>
     /// 
     /// </summary>
     public override BlockStatement DummyBlock {
@@ -1243,15 +1254,39 @@ namespace Microsoft.Cci.Ast {
     //^ [Once]
     private BlockStatement/*?*/ dummyBlock;
 
-    private NestedUnitNamespace GetOrCreateNestedUnitNamepace()
-      //^ ensures this.nestedUnitNamespace != null;
-    {
+    /// <summary>
+    /// 
+    /// </summary>
+    protected virtual void ResetDummyBlockIfNecessary(NamespaceDeclaration containingNamespace) {
+      if (this.dummyBlock == null) {
+        return;
+      }
+      lock(this) {
+        if (this.dummyBlock != null &&
+            this.dummyBlock.ContainingNamespaceDeclaration != containingNamespace) {
+            this.dummyBlock = null;
+        }
+      }
+    }
+
+    private NestedUnitNamespace GetOrCreateNestedUnitNamespace()
+        //^ requires this.nestedUnitNamespace == null;
+        //^ ensures this.nestedUnitNamespace != null;
+      {
       foreach (INamespaceMember member in this.ContainingNamespaceDeclaration.UnitNamespace.GetMembersNamed(this.Name, false)) {
         NestedUnitNamespace/*?*/ nuns = member as NestedUnitNamespace;
         if (nuns != null) {
-          this.nestedUnitNamespace = nuns;
-          nuns.AddNamespaceDeclaration(this);
-          return nuns;
+          if (this.nestedUnitNamespace == null)
+          {
+            // This can occur at the end of a recursive chain of calls to this
+            // instance method via the above call to GetMembersNamed().
+            // Predecessors in the chain avoid re-adding the declaration to the
+            // namespace, and/or erroneously modifying the namespace reference.
+            this.nestedUnitNamespace = nuns;
+            nuns.AddNamespaceDeclaration(this);
+          }
+          Debug.Assert(nuns == this.nestedUnitNamespace);
+          return this.nestedUnitNamespace;
         }
       }
       NestedUnitNamespace result = this.nestedUnitNamespace = this.CreateNestedNamespace();
@@ -1301,8 +1336,13 @@ namespace Microsoft.Cci.Ast {
     public NestedUnitNamespace NestedUnitNamespace {
       get {
         if (this.nestedUnitNamespace == null) {
-          this.GetOrCreateNestedUnitNamepace();
-          //^ assert this.nestedUnitNamespace != null;
+          lock(GlobalLock.LockingObject)
+          {
+            if (this.nestedUnitNamespace == null)
+            {
+              this.GetOrCreateNestedUnitNamespace();
+            }
+          }
         }
         return this.nestedUnitNamespace;
       }
@@ -1315,6 +1355,7 @@ namespace Microsoft.Cci.Ast {
     /// care not to call any other methods or property/event accessors on the object until after this method has been called.
     /// </summary>
     public virtual void SetContainingNamespaceDeclaration(NamespaceDeclaration containingNamespaceDeclaration, bool recurse) {
+      this.ResetDummyBlockIfNecessary(containingNamespaceDeclaration);
       this.containingNamespaceDeclaration = containingNamespaceDeclaration;
       if (!recurse) return;
       this.SetContainingNodes();

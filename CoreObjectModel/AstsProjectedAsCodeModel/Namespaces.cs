@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Collections.Generic;
@@ -144,8 +144,13 @@ namespace Microsoft.Cci.Ast {
     /// </summary>
     /// <param name="declaration">The namespace declaration to add to the list of declarations that together define this namespace definition.</param>
     protected internal void AddNamespaceDeclaration(NamespaceDeclaration declaration) {
-      this.namespaceDeclarations.Add(declaration);
-      this.AddContainer(declaration);
+      lock (GlobalLock.LockingObject) {
+        if (this.namespaceDeclarations.Contains(declaration)) {
+          return;
+        }
+        this.namespaceDeclarations.Add(declaration);
+        this.AddContainer(declaration);
+      }
     }
 
     /// <summary>

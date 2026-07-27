@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -220,7 +220,7 @@ namespace Microsoft.Cci.Ast {
   /// <summary>
   /// An event is a member that enables an object or class to provide notifications. Clients can attach executable code for events by supplying event handlers.
   /// </summary>
-  public class EventDeclaration : TypeDeclarationMember {
+  public class EventDeclaration : TypeDeclarationMember, ITypedMemberDeclaration {
 
     /// <summary>
     /// Allocates an event member that enables an object or class to provide notifications. Clients can attach executable code for events by supplying event handlers.
@@ -667,7 +667,7 @@ namespace Microsoft.Cci.Ast {
   /// <summary>
   /// A field is a member that represents a variable associated with an object or class.
   /// </summary>
-  public class FieldDeclaration : TypeDeclarationMember {
+  public class FieldDeclaration : TypeDeclarationMember, ITypedMemberDeclaration {
 
     /// <summary>
     /// Allocates a member that represents a variable associated with an object or class.
@@ -734,11 +734,26 @@ namespace Microsoft.Cci.Ast {
       Volatile=Static>>1
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     [Flags]
-    private enum ExtendedFlags {
+    protected enum ExtendedFlags {
+      /// <summary>
+      /// 
+      /// </summary>
       CustomAttributesNotYetProcessed=Flags.Volatile >> 1,
+      /// <summary>
+      /// 
+      /// </summary>
       Mapped=CustomAttributesNotYetProcessed>>1,
+      /// <summary>
+      /// 
+      /// </summary>
       MarshalledExplicitly=Mapped>>1,
+      /// <summary>
+      /// 
+      /// </summary>
       NotSerialized=MarshalledExplicitly>>1
     }
 
@@ -777,6 +792,7 @@ namespace Microsoft.Cci.Ast {
     /// <summary>
     /// The number of least significant bits that form part of the value of the field.
     /// </summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     public virtual uint BitLength {
       get { return TypeHelper.SizeOfType(this.Type.ResolvedType)*8; }
     }
@@ -1206,7 +1222,7 @@ namespace Microsoft.Cci.Ast {
   /// <summary>
   /// Represents a global variable.
   /// </summary>
-  public class GlobalFieldDeclaration : FieldDeclaration, INamespaceDeclarationMember, IAggregatableNamespaceDeclarationMember, IAggregatableTypeDeclarationMember {
+  public class GlobalFieldDeclaration : FieldDeclaration, ITypedMemberDeclaration, INamespaceDeclarationMember, IAggregatableNamespaceDeclarationMember, IAggregatableTypeDeclarationMember {
 
     /// <summary>
     /// Allocates a member that represents a variable associated with an object or class.
@@ -1632,7 +1648,7 @@ namespace Microsoft.Cci.Ast {
       //^ ensures this.containingTypeDeclaration == containingTypeDeclaration;
     {
       if (template.body != null)
-        this.body = (BlockStatement)template.body.MakeCopyFor(containingTypeDeclaration.DummyBlock);
+        this.body = (BlockStatement)template.body.MakeCopyFor(this.DummyBlock);
       //TODO: provide a way to provide body on demand by reparsing it.
       if (template.genericParameters != null && template.genericParameters.Count > 0)
         this.genericParameters = new List<GenericMethodParameterDeclaration>(template.genericParameters);
@@ -1784,6 +1800,21 @@ namespace Microsoft.Cci.Ast {
     }
     //^ [Once]
     private BlockStatement/*?*/ dummyBlock;
+
+    /// <summary>
+    /// Reset block that is the containing block for any expressions contained inside the type declaration
+    /// but not inside of a method, if necessary
+    /// </summary>
+    /// <value></value>
+    protected void ResetDummyBlockIfNecessary(TypeDeclaration containingTypeDeclaration) {
+      if (dummyBlock != null && dummyBlock.ContainingTypeDeclaration != containingTypeDeclaration) {
+        lock(this) {
+          if (dummyBlock != null && dummyBlock.ContainingTypeDeclaration != containingTypeDeclaration) {
+            dummyBlock = null;
+          }
+        }
+      }
+    }
 
     /// <summary>
     /// If the method is generic then this list contains the type parameters.
@@ -2279,6 +2310,7 @@ namespace Microsoft.Cci.Ast {
     public override void SetContainingTypeDeclaration(TypeDeclaration containingTypeDeclaration, bool recurse)
       //^ ensures this.ContainingTypeDeclaration == containingTypeDeclaration;
     {
+      ResetDummyBlockIfNecessary(containingTypeDeclaration);
       base.SetContainingTypeDeclaration(containingTypeDeclaration, recurse);
       //^ assert this.ContainingTypeDeclaration == containingTypeDeclaration;
       if (!recurse) return;
@@ -2831,6 +2863,7 @@ namespace Microsoft.Cci.Ast {
           flags |= MethodDeclaration.Flags.SpecialName;
           this.getter = new MethodDeclaration(this.getterAttributes, flags, this.Visibility, typeExpr, this.implementedInterfaces, name, null, parameters, null, getterBody, this.SourceLocation);
           this.getter.SetContainingTypeDeclaration(this.ContainingTypeDeclaration, false);
+          getterBody.SetContainingBlock(this.getter.DummyBlock);
         }
         return this.getter;
       }
@@ -3101,7 +3134,7 @@ namespace Microsoft.Cci.Ast {
             foreach (ParameterDeclaration indexerParameter in this.Parameters) parameters.Add(indexerParameter);
           } else
             parameters = new List<ParameterDeclaration>(1);
-          NameDeclaration pname = new NameDeclaration(this.NameTable.value, sourceLocation);
+          NameDeclaration pname = SetterValueName;
           parameters.Add(new ParameterDeclaration(null, this.Type, pname, null, (ushort)parameters.Count, false, false, false, false, this.Type.SourceLocation));
           //TODO: worry about setter attributes defined on the property itself
           MethodDeclaration.Flags flags = (MethodDeclaration.Flags)(this.flags&0xFFFFF000);
@@ -3171,6 +3204,19 @@ namespace Microsoft.Cci.Ast {
       get { return this.PropertyDefinition; }
     }
 
+    /// <summary>
+    /// Languages that allow alternative syntax for a setter's value parameter may override this.
+    /// This implementation returns the static keyword, or null if there is no setter.
+    /// </summary>
+    public virtual NameDeclaration SetterValueName { 
+      get {
+        if (this.setterValueName == null && this.SetterBody != null) {
+          setterValueName = new NameDeclaration(this.NameTable.value, this.SetterBody.SourceLocation);
+        }
+        return setterValueName;
+      }
+    }
+    NameDeclaration setterValueName;
   }
 
   /// <summary>

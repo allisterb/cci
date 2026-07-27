@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -305,7 +305,7 @@ namespace Microsoft.Cci {
   /// Options that specify how type and namespace member names should be formatted.
   /// </summary>
   [Flags]
-  public enum NameFormattingOptions {
+  public enum NameFormattingOptions : long {
     /// <summary>
     /// Format the name with default options.
     /// </summary>
@@ -465,6 +465,11 @@ namespace Microsoft.Cci {
     /// Include the visibility of the member in its name.
     /// </summary>
     Visibility=UseTypeKeywords << 1,
+
+    /// <summary>
+    /// Include field initializer value if any.
+    /// </summary>
+    UseFieldInitializer=Visibility << 1,
   }
 
   /// <summary>
@@ -505,6 +510,7 @@ namespace Microsoft.Cci {
       Contract.Requires(typeDefinition != null);
       Contract.Requires(member != null);
 
+      if (member.Visibility == TypeMemberVisibility.Other) return false;
       if (TypeHelper.TypesAreEquivalent(typeDefinition, member.ContainingTypeDefinition)) return true;
       if (typeDefinition.IsGeneric && TypeHelper.TypesAreEquivalent(typeDefinition.InstanceType, member.ContainingTypeDefinition))
         return true;

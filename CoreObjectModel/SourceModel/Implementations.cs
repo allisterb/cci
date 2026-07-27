@@ -133,9 +133,9 @@ namespace Microsoft.Cci {
     /// Raises the Edits event with the given edit event arguments. 
     /// The events are raised on different thread.
     /// </summary>
-    public void ReportEdits(EditEventArgs editEventArguments) {
+    public virtual void ReportEdits(EditEventArgs editEventArguments) {
 #if !COREFX_SUBSET
-      if (this.Edits != null)
+      if (CanReportEdits())
         ThreadPool.QueueUserWorkItem(this.ReportEditsUsingDifferentThread, editEventArguments);
 #else
       throw new NotImplementedException();
@@ -143,14 +143,23 @@ namespace Microsoft.Cci {
     }
 
     /// <summary>
+    ///
+    /// </summary>
+    /// <returns></returns>
+    protected bool CanReportEdits()
+    {
+        return this.Edits != null;
+    }
+
+    /// <summary>
     /// Raises the Edits event with the given edit event arguments. 
     /// </summary>
     /// <param name="state">The edit event arguments.</param>
-    private void ReportEditsUsingDifferentThread(object/*?*/ state) {
+    protected void ReportEditsUsingDifferentThread(object/*?*/ state) {
       Contract.Requires(state is EditEventArgs);
 
       EditEventArgs editEventArguments = (EditEventArgs)state;
-      if (this.Edits != null)
+      if (CanReportEdits())
         this.Edits(this, editEventArguments);
     }
 
@@ -158,9 +167,9 @@ namespace Microsoft.Cci {
     /// Raises the SymbolTableEdits event with the given edit event arguments.
     /// The events are raised on different thread.
     /// </summary>
-    public void ReportSymbolTableEdits(EditEventArgs editEventArguments) {
+    public virtual void ReportSymbolTableEdits(EditEventArgs editEventArguments) {
 #if !COREFX_SUBSET
-      if (this.SymbolTableEdits != null)
+      if (CanReportSymbolTableEdits())
         ThreadPool.QueueUserWorkItem(this.ReportSymbolTableEditsUsingDifferentThread, editEventArguments);
 #else
       throw new NotImplementedException();
@@ -168,14 +177,23 @@ namespace Microsoft.Cci {
     }
 
     /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    protected bool CanReportSymbolTableEdits()
+    {
+        return this.SymbolTableEdits != null;
+    }
+
+    /// <summary>
     /// Raises the SymbolTableEdits event with the given edit event arguments.
     /// </summary>
     /// <param name="state">The edit event arguments.</param>
-    private void ReportSymbolTableEditsUsingDifferentThread(object/*?*/ state) {
+    protected void ReportSymbolTableEditsUsingDifferentThread(object/*?*/ state) {
       Contract.Requires(state is EditEventArgs);
 
       EditEventArgs editEventArguments = (EditEventArgs)state;
-      if (this.SymbolTableEdits != null)
+      if (CanReportSymbolTableEdits())
         this.SymbolTableEdits(this, editEventArguments);
     }
 

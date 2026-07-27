@@ -47,6 +47,9 @@ TestResult.xml
 [Rr]eleasePS/
 dlldata.c
 
+# ResXFileCodeGenerator build output
+*.Designer.cs
+
 *_i.c
 *_p.c
 *_i.h

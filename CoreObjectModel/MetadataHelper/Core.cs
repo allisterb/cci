@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -636,6 +636,15 @@ namespace Microsoft.Cci {
         Microsoft.Cci.ErrorEventArgs errorEventArguments = new Microsoft.Cci.ErrorEventArgs(error.ErrorReporter, error.Location, errors.AsReadOnly());
         this.ReportErrors(errorEventArguments);
       }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    protected bool CanReportErrors()
+    {
+        return this.Errors != null;
     }
 
     /// <summary>

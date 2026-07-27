@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{A9103DDA-3A93-441A-8326-6EB20518C251}</ProjectGuid>
+    <ProjectGuid>{1DC39EB4-BD06-4D48-8C8A-617FF56D2737}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Microsoft.Cci</RootNamespace>
@@ -24,7 +24,7 @@
     </UpgradeBackupLocation>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\Common\InterimKey.snk</AssemblyOriginatorKeyFile>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -161,19 +161,19 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\CoreObjectModel\CodeModel\CodeModel.csproj">
-      <Project>{035FEA7F-0D36-4AE4-B694-EC45191B9AF2}</Project>
+      <Project>{923063f2-afd8-4513-b905-8427c6f46b60}</Project>
       <Name>CodeModel</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\CoreObjectModel\MetadataHelper\MetadataHelper.csproj">
-      <Project>{4A34A3C5-6176-49D7-A4C5-B2B671247F8F}</Project>
+      <Project>{4f6a005a-348a-4926-92ac-aa1d27406b2d}</Project>
       <Name>MetadataHelper</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\CoreObjectModel\MetadataModel\MetadataModel.csproj">
-      <Project>{33CAB640-0D03-43DF-81BD-22CDC6C0A597}</Project>
+      <Project>{98f3001e-3ebf-4a39-b692-98038df6b1ad}</Project>
       <Name>MetadataModel</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\CoreObjectModel\SourceModel\SourceModel.csproj">
-      <Project>{4B0054FD-124A-4037-9965-BDB55E6BF389}</Project>
+      <Project>{1909ddfb-fcb1-444b-8dbe-1b0f43051509}</Project>
       <Name>SourceModel</Name>
     </ProjectReference>
   </ItemGroup>

@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Collections.Generic;
@@ -21,6 +21,7 @@ namespace Microsoft.Cci.Ast {
     /// <param name="messageArguments">Zero or more strings that are to be substituted for "{i}" sequences in the message string return by GetMessage.</param>
     public AstErrorMessage(ISourceItem sourceItem, Error error, params string[] messageArguments)
       : base(sourceItem.SourceLocation, (long)error, error.ToString(), messageArguments) {
+      this.item = sourceItem;
     }
 
     /// <summary>
@@ -32,6 +33,7 @@ namespace Microsoft.Cci.Ast {
     /// <param name="messageArguments">Zero or more strings that are to be substituted for "{i}" sequences in the message string return by GetMessage.</param>
     public AstErrorMessage(ISourceItem sourceItem, Error error, IEnumerable<ILocation> relatedLocations, params string[] messageArguments)
       : base(sourceItem.SourceLocation, (long)error, error.ToString(), relatedLocations, messageArguments) {
+      this.item = sourceItem;
     }
 
     /// <summary>
@@ -44,6 +46,7 @@ namespace Microsoft.Cci.Ast {
     /// <param name="messageArguments">Zero or more strings that are to be substituted for "{i}" sequences in the message string return by GetMessage.</param>
     private AstErrorMessage(ISourceLocation sourceLocation, long errorCode, string messageKey, IEnumerable<ILocation> relatedLocations, string[] messageArguments)
       : base(sourceLocation, errorCode, messageKey, relatedLocations, messageArguments) {
+      this.item = null;
     }
 
     /// <summary>
@@ -102,6 +105,16 @@ namespace Microsoft.Cci.Ast {
         return this.GetMessage(rmgr);
       }
     }
+
+    /// <summary>
+    /// The AST node, if any, where the error is raised.
+    /// </summary>
+    public ISourceItem Item {
+      get {
+        return this.item;
+      }
+    }
+    readonly ISourceItem item;
   }
 
   /// <summary>

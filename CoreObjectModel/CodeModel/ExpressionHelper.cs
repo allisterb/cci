@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -39,6 +39,14 @@ namespace Microsoft.Cci {
     }
 
     /// <summary>
+    /// Returns true if the decimal value is an integral value.
+    /// </summary>
+    public static bool HasZeroScale(decimal value)
+    {
+      return value == decimal.Truncate(value);
+    }
+
+    /// <summary>
     /// Returns true if the constant is an integral value that falls in the range of the target type. 
     /// The target type does have to be an integral type. If it is not, this method always returns false.
     /// </summary>
@@ -69,7 +77,7 @@ namespace Microsoft.Cci {
                 return ic.ToUInt64(null) <= byte.MaxValue;
               case System.TypeCode.Decimal:
                 decimal d = ic.ToDecimal(null);
-                return byte.MinValue <= d && d <= byte.MaxValue;
+                return byte.MinValue <= d && d <= byte.MaxValue && HasZeroScale(d);
             }
             return false;
           }
@@ -96,7 +104,7 @@ namespace Microsoft.Cci {
                 return ic.ToUInt64(null) <= ushort.MaxValue;
               case System.TypeCode.Decimal:
                 decimal d = ic.ToDecimal(null);
-                return ushort.MinValue <= d && d <= ushort.MaxValue;
+                return ushort.MinValue <= d && d <= ushort.MaxValue && HasZeroScale(d);
             }
             return false;
           }
@@ -121,7 +129,7 @@ namespace Microsoft.Cci {
                 return ic.ToUInt64(null) <= uint.MaxValue;
               case System.TypeCode.Decimal:
                 decimal d = ic.ToDecimal(null);
-                return uint.MinValue <= d && d <= uint.MaxValue;
+                return uint.MinValue <= d && d <= uint.MaxValue && HasZeroScale(d);
             }
             return false;
           }
@@ -144,7 +152,7 @@ namespace Microsoft.Cci {
                 return 0 <= ic.ToInt64(null);
               case System.TypeCode.Decimal:
                 decimal d = ic.ToDecimal(null);
-                return 0 <= d && d <= ulong.MaxValue;
+                return 0 <= d && d <= ulong.MaxValue && HasZeroScale(d);
             }
             return false;
           }
@@ -173,7 +181,7 @@ namespace Microsoft.Cci {
                 return ic.ToUInt64(null) <= (ulong)sbyte.MaxValue;
               case System.TypeCode.Decimal:
                 decimal d = ic.ToDecimal(null);
-                return sbyte.MinValue <= d && d <= sbyte.MaxValue;
+                return sbyte.MinValue <= d && d <= sbyte.MaxValue && HasZeroScale(d);
             }
             return false;
           }
@@ -199,7 +207,7 @@ namespace Microsoft.Cci {
                 return ic.ToUInt64(null) <= (ulong)short.MaxValue;
               case System.TypeCode.Decimal:
                 decimal d = ic.ToDecimal(null);
-                return short.MinValue <= d && d <= short.MaxValue;
+                return short.MinValue <= d && d <= short.MaxValue && HasZeroScale(d);
             }
             return false;
           }
@@ -222,7 +230,7 @@ namespace Microsoft.Cci {
                 return ic.ToUInt64(null) <= int.MaxValue;
               case System.TypeCode.Decimal:
                 decimal d = ic.ToDecimal(null);
-                return int.MinValue <= d && d <= int.MaxValue;
+                return int.MinValue <= d && d <= int.MaxValue && HasZeroScale(d);
             }
             return false;
           }
@@ -242,7 +250,7 @@ namespace Microsoft.Cci {
                 return ic.ToUInt64(null) <= int.MaxValue;
               case System.TypeCode.Decimal:
                 decimal d = ic.ToDecimal(null);
-                return long.MinValue <= d && d <= long.MaxValue;
+                return long.MinValue <= d && d <= long.MaxValue && HasZeroScale(d);
             }
             return false;
           }

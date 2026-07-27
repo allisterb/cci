@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -1207,10 +1207,11 @@ namespace Microsoft.Cci.Ast {
       TypeDeclaration/*?*/ tDecl = null;
       foreach (TypeDeclaration typeDeclaration in this.TypeDeclarations) {
         if (tDecl == null) tDecl = typeDeclaration as TypeDeclaration;
+        INameTable declarationNametable = tDecl.Helper.Compilation.NameTable;
         foreach (ITypeDeclarationMember member in typeDeclaration.TypeDeclarationMembers) {
           MethodDeclaration/*?*/ method = member as MethodDeclaration;
           if (method == null) continue;
-          if (!method.IsSpecialName || method.Name.Value != ".ctor") continue;
+          if (!method.IsSpecialName || method.IsStatic || method.Name.UniqueKey != declarationNametable.Ctor.UniqueKey) continue;
           return; //There is a declared constructor
         }
       }
@@ -1323,6 +1324,7 @@ namespace Microsoft.Cci.Ast {
       List<FieldDeclaration> fieldsToIntialize = new List<FieldDeclaration>();
       foreach (TypeDeclaration typeDeclaration in this.TypeDeclarations) {
         if (tDecl == null) tDecl = typeDeclaration as TypeDeclaration;
+        INameTable declarationNametable = tDecl.Helper.Compilation.NameTable;
         foreach (ITypeDeclarationMember member in typeDeclaration.TypeDeclarationMembers) {
           FieldDeclaration/*?*/ fieldDecl = member as FieldDeclaration;
           if (fieldDecl != null && fieldDecl.IsStatic && !fieldDecl.IsCompileTimeConstant && fieldDecl.Initializer != null) {
@@ -1330,7 +1332,7 @@ namespace Microsoft.Cci.Ast {
           }
           MethodDeclaration/*?*/ method = member as MethodDeclaration;
           if (method == null) continue;
-          if (!method.IsSpecialName || method.Name.Value != ".cctor") continue;
+          if (!method.IsSpecialName || !method.IsStatic || method.Name.UniqueKey != declarationNametable.Cctor.UniqueKey) continue;
           if (IteratorHelper.EnumerableIsNotEmpty(method.Parameters)) continue;
           return; //There is a declared static constructor
         }

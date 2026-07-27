@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -1872,7 +1872,7 @@ namespace Microsoft.Cci.Ast {
 
     #region ISignatureDeclaration Members
 
-    TypeExpression ISignatureDeclaration.Type {
+    TypeExpression ITypedMemberDeclaration.Type {
       get {
         if (this.returnType == null)
           this.returnType = TypeExpression.For(this.Helper.GetInvokeMethod(this.delegateType).Type);
@@ -2034,7 +2034,7 @@ namespace Microsoft.Cci.Ast {
 
     #region ISignatureDeclaration Members
 
-    TypeExpression ISignatureDeclaration.Type {
+    TypeExpression ITypedMemberDeclaration.Type {
       get { return TypeExpression.For(Dummy.Type); }
     }
 
@@ -2718,6 +2718,15 @@ namespace Microsoft.Cci.Ast {
     /// <param name="sourceLocation">The source location corresponding to the newly allocated expression.</param>
     public BaseClassReference(ISourceLocation sourceLocation)
       : base(sourceLocation) {
+    }
+
+    /// <summary>
+    /// Allocates an expression that binds to the base class instance of the current object instance.
+    /// </summary>
+    /// <param name="containingBlock">A code block in the current object instance.</param>
+    /// <param name="sourceLocation">The source location corresponding to the newly allocated expression.</param>
+    public BaseClassReference(BlockStatement containingBlock, ISourceLocation sourceLocation)
+      : base(containingBlock, sourceLocation) {
     }
 
     /// <summary>
@@ -5764,6 +5773,32 @@ namespace Microsoft.Cci.Ast {
             }
             return value;
           }
+        case PrimitiveTypeCode.NotPrimitive: {
+          if (targetType == PlatformType.SystemDecimal.ResolvedType) {
+            IConvertible/*?*/ ic = value as IConvertible;
+            if (ic != null) {
+              switch (ic.GetTypeCode()) {
+                case System.TypeCode.SByte:
+                  return (decimal)ic.ToSByte(null);
+                case System.TypeCode.Byte:
+                  return (decimal)ic.ToByte(null);
+                case System.TypeCode.Int16:
+                  return (decimal)ic.ToInt16(null);
+                case System.TypeCode.UInt16:
+                  return (decimal)ic.ToUInt16(null);
+                case System.TypeCode.Int32:
+                  return (decimal)ic.ToUInt32(null);
+                case System.TypeCode.Int64:
+                  return (decimal)ic.ToInt64(null);
+                case System.TypeCode.UInt32:
+                  return (decimal)ic.ToUInt32(null);
+                case System.TypeCode.UInt64:
+                  return (decimal)ic.ToUInt64(null);
+              }
+            }
+          }
+          break;
+        }
       }
       return value;
     }
@@ -5897,6 +5932,7 @@ namespace Microsoft.Cci.Ast {
           case System.TypeCode.UInt16:
           case System.TypeCode.UInt32:
           case System.TypeCode.UInt64:
+          case System.TypeCode.Decimal:
             return true;
         }
         return false;
@@ -16418,6 +16454,12 @@ namespace Microsoft.Cci.Ast {
       if (qualifyingType != null) {
         if (!this.ContainingBlock.ContainingTypeDeclaration.CanAccess(qualifyingType))
           resolvedQualifier = this.ResolveQualifierAsNamespace(reportError);
+        else if (this.ContainingBlock.ContainingTypeDeclaration.TypeDefinition == qualifyingType) {
+          INamespaceTypeDefinition namespaceType = qualifyingType as INamespaceTypeDefinition;
+          if (namespaceType != null) {
+            resolvedQualifier = namespaceType.ContainingNamespace;
+          }
+        }
         else {
           INestedTypeDefinition/*?*/ resolvedTypeMember = this.ResolveTypeMember(qualifyingType, false) as INestedTypeDefinition;
           if (resolvedTypeMember != null) {
@@ -18063,7 +18105,12 @@ namespace Microsoft.Cci.Ast {
         this.hasErrors = null;
       return this.resolvedValue;
     }
-    object/*?*/ resolvedValue;
+
+    /// <summary>
+    /// Non null when the name has been suitably bound. Visible to derived classes so that it can be set during construction.
+    /// When non null, the item has been bound and need not be resolved again.
+    /// </summary>
+    protected object/*?*/ resolvedValue;
 
     /// <summary>
     /// Returns true if this resolves to a local declaration or a 
@@ -19403,6 +19450,15 @@ namespace Microsoft.Cci.Ast {
     }
 
     /// <summary>
+    /// Veto caching an unexpected resolution if necessary.
+    /// </summary>
+    /// <param name="resolvedType">The result of calling <see cref="Resolve()"/></param>
+    /// <returns>True if the type should be cached and returned by all subsequent accesses of <see cref="ResolvedType"/>.</returns>
+    protected virtual bool ShouldCacheThisResolution(ITypeDefinition resolvedType) {
+      return true;
+    }
+
+    /// <summary>
     /// The type denoted by the expression. If expression cannot be resolved, a dummy type is returned. If the expression is ambiguous the first matching type is returned.
     /// If the expression does not resolve to exactly one type, an error is added to the error collection of the compilation context.
     /// </summary>
@@ -19410,7 +19466,11 @@ namespace Microsoft.Cci.Ast {
       get {
         if (this.resolvedType == null) {
           //this.resolvedType = Dummy.Type;
-          this.resolvedType = this.Resolve();
+          ITypeDefinition resolvedType = this.Resolve();
+          if (!ShouldCacheThisResolution(resolvedType)) {
+            return resolvedType;
+          }
+          this.resolvedType = resolvedType;
         }
         return this.resolvedType;
       }

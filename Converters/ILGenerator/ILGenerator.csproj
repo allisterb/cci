@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{08156C78-403A-4112-AD81-8646AC51CD2F}</ProjectGuid>
+    <ProjectGuid>{0EC2771A-1599-466B-AF15-868814C89DF8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Microsoft.Cci</RootNamespace>
@@ -21,7 +21,7 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -140,15 +140,15 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\CoreObjectModel\MetadataHelper\MetadataHelper.csproj">
-      <Project>{4A34A3C5-6176-49D7-A4C5-B2B671247F8F}</Project>
+      <Project>{4f6a005a-348a-4926-92ac-aa1d27406b2d}</Project>
       <Name>MetadataHelper</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\CoreObjectModel\MetadataModel\MetadataModel.csproj">
-      <Project>{33CAB640-0D03-43DF-81BD-22CDC6C0A597}</Project>
+      <Project>{98f3001e-3ebf-4a39-b692-98038df6b1ad}</Project>
       <Name>MetadataModel</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\CoreObjectModel\SourceModel\SourceModel.csproj">
-      <Project>{4B0054FD-124A-4037-9965-BDB55E6BF389}</Project>
+      <Project>{1909ddfb-fcb1-444b-8dbe-1b0f43051509}</Project>
       <Name>SourceModel</Name>
     </ProjectReference>
   </ItemGroup>

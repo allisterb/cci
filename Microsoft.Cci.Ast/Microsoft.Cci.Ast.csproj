@@ -1,0 +1,171 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\common\Default.props" />
+
+  <PropertyGroup>
+    <AssemblyName>$(CciAssemblyNamePrefix)Microsoft.Cci.Ast</AssemblyName>
+    <TargetFramework>netstandard2</TargetFramework>
+    <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
+    <Platform Condition="'$(Platform)' == ''">AnyCPU</Platform>
+    <RootNamespace>Microsoft.Cci</RootNamespace>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Nullable>disable</Nullable>
+    <LangVersion>9.0</LangVersion>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>$(CciCommonSigningKeyFile)</AssemblyOriginatorKeyFile>
+    <IsPackable>false</IsPackable>
+    <Product>CCI</Product>
+    <AssemblyTitle>Microsoft.Cci.Asts</AssemblyTitle>
+    <Description>A set of base classes that provide common implementations of the functionality required by the Microsoft.Cci source object model.</Description>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    
+    <!-- $$TODO! If this is ever going to work on anything other than classic
+    wintel architectures, this has got to be dealt with. -->
+    <DefineConstants>LITTLEENDIAN;$(DefineConstants)</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DefineConstants>TRACE;DEBUG;$(DefineConstants)</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Reelease|AnyCPU' ">
+    <DefineConstants>TRACE;$(DefineConstants)</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="**\*.cs" />
+  </ItemGroup>
+
+  <!-- Project Sources (these are generally in least-depenedent order). -->
+  
+  <!-- Common -->
+  <PropertyGroup>
+    <CciCommonSrcDirectory>..\Common\Include\</CciCommonSrcDirectory>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(CciCommonSrcDirectory)\*.cs">
+      <Link>Common\%(FileName)%(Extension)</Link>
+    </Compile>
+    <Compile Remove="$(CciCommonSrcDirectory)\Version.cs" />
+  </ItemGroup>
+  
+  <!-- MetadataModel -->
+  <PropertyGroup>
+    <CciMetdataModelSrcDirectory>..\CoreObjectModel\MetadataModel\</CciMetdataModelSrcDirectory>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(CciMetdataModelSrcDirectory)*.cs">
+      <Link>MetadataModel\%(FileName)%(Extension)</Link>
+    </Compile>
+    <Compile Remove="$(CciMetdataModelSrcDirectory)CachingInternFactory.cs" />
+  </ItemGroup>
+  
+  <!-- MetadataHelper -->
+  <PropertyGroup>
+    <CciMetadataHelperSrcDirectory>..\CoreObjectModel\MetadataHelper\</CciMetadataHelperSrcDirectory>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(CciMetadataHelperSrcDirectory)*.cs">
+      <Link>MetadataHelper\%(FileName)%(Extension)</Link>
+    </Compile>
+    <EmbeddedResource Include="$(CciMetadataHelperSrcDirectory)ErrorMessages.resx">
+      <Link>MetadataHelper\%(FileName)%(Extension)</Link>
+      <SubType>Designer</SubType>
+      <LogicalName>Microsoft.Cci.MetadataHelper.ErrorMessages</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+  
+  <!-- MutableMetadataModel -->
+  <PropertyGroup>
+    <CciMutableMetdataModelSrcDirectory>..\CoreObjectModel\MutableMetadataModel\</CciMutableMetdataModelSrcDirectory>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(CciMutableMetdataModelSrcDirectory)*.cs">
+      <Link>MutableMetadataModel\%(FileName)%(Extension)</Link>
+    </Compile>
+    <Compile Remove="$(CciMutableMetdataModelSrcDirectory)CachingInternFactory.cs" />
+  </ItemGroup>
+
+  <!-- PeReader -->
+  <PropertyGroup>
+    <CciPeReaderSrcDirectory>..\PEReaderAndWriter\PeReader\</CciPeReaderSrcDirectory>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(CciPeReaderSrcDirectory)*.cs">
+      <Link>PeReader\%(FileName)%(Extension)</Link>
+    </Compile>
+    <EmbeddedResource Include="$(CciPeReaderSrcDirectory)PeReaderErrorMessages.resx">
+      <Link>PeReader\%(FileName)%(Extension)</Link>
+      <LogicalName>Microsoft.Cci.PeReaderErrorMessages</LogicalName>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <!-- SourceModel -->
+  <PropertyGroup>
+    <CciSourceModelSrcDirectory>..\CoreObjectModel\SourceModel\</CciSourceModelSrcDirectory>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(CciSourceModelSrcDirectory)*.cs">
+      <Link>SourceModel\%(FileName)%(Extension)</Link>
+    </Compile>
+  </ItemGroup>
+
+  <!-- CodeModel -->
+  <PropertyGroup>
+    <CciCodeModelSrcDirectory>..\CoreObjectModel\CodeModel\</CciCodeModelSrcDirectory>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(CciCodeModelSrcDirectory)*.cs">
+      <Link>CodeModel\%(FileName)%(Extension)</Link>
+    </Compile>
+  </ItemGroup>
+
+  <!-- ILGenerator -->
+  <PropertyGroup>
+    <CciILGeneratorSrcDirectory>..\Converters\ILGenerator\</CciILGeneratorSrcDirectory>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(CciILGeneratorSrcDirectory)*.cs">
+      <Link>ILGenerator\%(FileName)%(Extension)</Link>
+    </Compile>
+  </ItemGroup>
+
+  <!-- CodeModelToIL -->
+  <PropertyGroup>
+    <CciCodeModelToILSrcDirectory>..\Converters\CodeModelToIL\</CciCodeModelToILSrcDirectory>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(CciCodeModelToILSrcDirectory)*.cs">
+      <Link>CodeModelToIL\%(FileName)%(Extension)</Link>
+    </Compile>
+  </ItemGroup>
+
+  <!-- MutableCodeModel -->
+  <PropertyGroup>
+    <CciMutableCodeModelSrcDirectory>..\CoreObjectModel\MutableCodeModel\</CciMutableCodeModelSrcDirectory>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(CciMutableCodeModelSrcDirectory)*.cs">
+      <Link>MutableCodeModel\%(FileName)%(Extension)</Link>
+    </Compile>
+    <Compile Include="$(CciMutableCodeModelSrcDirectory)Normalizer\*.cs">
+      <Link>MutableCodeModel\Normalizer\%(FileName)%(Extension)</Link>
+    </Compile>
+  </ItemGroup>
+
+  <!-- AstsProjectedAsCodeModel -->
+  <PropertyGroup>
+    <CciAstsProjectedAsCodeModelSrcDirectory>..\CoreObjectModel\AstsProjectedAsCodeModel\</CciAstsProjectedAsCodeModelSrcDirectory>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(CciAstsProjectedAsCodeModelSrcDirectory)*.cs">
+      <Link>AstsProjectedAsCodeModel\%(FileName)%(Extension)</Link>
+    </Compile>
+    <EmbeddedResource Include="$(CciAstsProjectedAsCodeModelSrcDirectory)ErrorMessages.resx">
+      <SubType>Designer</SubType>
+      <LogicalName>Microsoft.Cci.Ast.ErrorMessages.resources</LogicalName>
+      <Link>AstsProjectedAsCodeModel\%(FileName)%(Extension)</Link>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>

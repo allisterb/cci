@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{035FEA7F-0D36-4AE4-B694-EC45191B9AF2}</ProjectGuid>
+    <ProjectGuid>{923063F2-AFD8-4513-B905-8427C6F46B60}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Microsoft.Cci</RootNamespace>
@@ -16,7 +16,7 @@
     <SccProvider>SAK</SccProvider>
     <SignAssembly>true</SignAssembly>
     <OldToolsVersion>3.5</OldToolsVersion>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation />
@@ -109,20 +109,6 @@
     <Compile Include="Visitors.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MetadataHelper\MetadataHelper.csproj">
-      <Project>{4A34A3C5-6176-49D7-A4C5-B2B671247F8F}</Project>
-      <Name>MetadataHelper</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MetadataModel\MetadataModel.csproj">
-      <Project>{33CAB640-0D03-43DF-81BD-22CDC6C0A597}</Project>
-      <Name>MetadataModel</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SourceModel\SourceModel.csproj">
-      <Project>{4B0054FD-124A-4037-9965-BDB55E6BF389}</Project>
-      <Name>SourceModel</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>
       <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
@@ -138,6 +124,20 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MetadataHelper\MetadataHelper.csproj">
+      <Project>{4f6a005a-348a-4926-92ac-aa1d27406b2d}</Project>
+      <Name>MetadataHelper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MetadataModel\MetadataModel.csproj">
+      <Project>{98f3001e-3ebf-4a39-b692-98038df6b1ad}</Project>
+      <Name>MetadataModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SourceModel\SourceModel.csproj">
+      <Project>{1909ddfb-fcb1-444b-8dbe-1b0f43051509}</Project>
+      <Name>SourceModel</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

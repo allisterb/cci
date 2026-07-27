@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -938,6 +938,9 @@ namespace Microsoft.Cci.MutableCodeModel {
     }
     List<IGenericMethodInstanceReference>/*?*/ genericMethodInstances;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public COR20Flags COR20Flags {
       get { return this.cor20Flags; }
       set { this.cor20Flags = value; }

@@ -1,21 +1,20 @@
-// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Linq;
 using Microsoft.Cci.Contracts;
-using Microsoft.Cci.UtilityDataStructures;
 using Microsoft.Cci.Immutable;
 
 //^ using Microsoft.Contracts;
 
 namespace Microsoft.Cci.Ast {
 
-  /// <summary>
-  /// An object that describes an edit to a source file.
-  /// </summary>
-  public abstract class AstSourceDocumentEdit : SourceDocumentEdit {
+    /// <summary>
+    /// An object that describes an edit to a source file.
+    /// </summary>
+    public abstract class AstSourceDocumentEdit : SourceDocumentEdit {
 
     /// <summary>
     /// Allocates an object that describes an edit to a source file.
@@ -303,7 +302,7 @@ namespace Microsoft.Cci.Ast {
       get {
         PlatformType/*?*/ platformType = this.platformType;
         if (platformType == null) {
-          platformType = new PlatformType(this.HostEnvironment);
+          platformType = GetPlatformType();
           lock (this) {
             if (this.platformType == null)
               this.platformType = platformType;
@@ -316,13 +315,24 @@ namespace Microsoft.Cci.Ast {
     PlatformType/*?*/ platformType;
 
     /// <summary>
+    /// Returns an object that provides a collection of references to types from the core platform, such as System.Object and System.String.
+    /// </summary>
+    protected virtual PlatformType GetPlatformType() {
+      return new PlatformType(this.HostEnvironment);
+    }
+
+    /// <summary>
     /// The root of an object model that represents the output of a compilation. This includes a symbol table that corresponds to the
     /// metadata in a PE file, as well as compiled method bodies that corresponds to the instructions streams in a PE file.
     /// </summary>
     public Unit Result {
       get { return this.result; }
     }
-    readonly Unit result;
+
+    /// <summary>
+    /// Make protected for compilations not generating PE's, etc.
+    /// </summary>
+    protected Unit result;
 
     /// <summary>
     /// An object that can map some kinds of ILocation objects to IPrimarySourceLocation objects.
@@ -749,7 +759,10 @@ namespace Microsoft.Cci.Ast {
       }
       //^ assume false; //unsatisfied precondition: requires this.SourceLocation.SourceDocument == edit.SourceLocationBeforeEdit.SourceDocument;
       RootNamespaceDeclaration result = this.GetUpdatedRootNamespace(oldMember, newMember, edit, true);
-      this.CompareOldAndNew(oldMember, newMember, edit, out editEventArgs, out symbolTableEditEventArgs);
+      // This call breaks the contracts for the symbol table, because it
+      // accesses definitions before the tree is completed.
+      //this.CompareOldAndNew(oldMember, newMember, edit, out editEventArgs, out symbolTableEditEventArgs);
+      editEventArgs = symbolTableEditEventArgs = null;
       return result;
     }
 
@@ -2214,21 +2227,25 @@ namespace Microsoft.Cci.Ast {
     /// <summary>
     /// Returns true if the given method can be called with the given arguments, if 
     /// need be after applying implicit conversions and constructing a parameter array, 
-    /// or a runtimeargumenthandle.
+    /// or a runtimeargumenthandle. If argumentListIsIncomplete is true only the
+    /// first n parameters of the method are considered, where n is the number of
+    /// given arguments.
     /// </summary>
     //^ [Pure]
-    public virtual bool MethodIsEligible(IMethodDefinition method, IEnumerable<Expression> arguments) {
-      return this.MethodIsEligible(method, arguments, false);
+    public virtual bool MethodIsEligible(IMethodDefinition method, IEnumerable<Expression> arguments, bool argumentListIsIncomplete) {
+      return this.MethodIsEligible(method, arguments, argumentListIsIncomplete, false);
     }
 
     /// <summary>
     /// Returns true if the given method can be called with the given arguments, if 
     /// need be after applying implicit conversions and constructing a parameter array, 
     /// or a runtimeargumenthandle. If allowTypeMismatch is true then only the number of parameters are considered
-    /// when deciding if method is eligible.
+    /// when deciding if method is eligible. If argumentListIsIncomplete is true only the
+    /// first n parameters of the method are considered, where n is the number of
+    /// given arguments.
     /// </summary>
     //^ [Pure]
-    protected virtual bool MethodIsEligible(IMethodDefinition method, IEnumerable<Expression> arguments, bool allowTypeMismatch) {
+    protected virtual bool MethodIsEligible(IMethodDefinition method, IEnumerable<Expression> arguments, bool argumentListIsIncomplete, bool allowTypeMismatch) {
       IEnumerator<IParameterDefinition> methodParameterEnumerator = method.Parameters.GetEnumerator();
       ITypeDefinition methodParamArrayElementType = Dummy.Type;
       foreach (Expression argument in arguments) {
@@ -2264,7 +2281,7 @@ namespace Microsoft.Cci.Ast {
           if (!allowTypeMismatch) return false;
         }
       }
-      if (methodParameterEnumerator.MoveNext()) return methodParameterEnumerator.Current.IsParameterArray;
+      if (methodParameterEnumerator.MoveNext()) return argumentListIsIncomplete || methodParameterEnumerator.Current.IsParameterArray;
       return true;
     }
 
@@ -2363,25 +2380,36 @@ namespace Microsoft.Cci.Ast {
 
     /// <summary>
     /// Returns true if the given method can be called with the given number of arguments 
-    /// either because the method's last parameter is a parameter array 
+    /// either because the method's last parameter is a parameter array, or ends with optional parameters, 
     /// or because the method accepts extra parameter
     /// </summary>
     //^ [Pure]
     private bool MethodQualifiesEvenIfArgumentNumberMismatches(IMethodDefinition method, uint methodParameterCount, uint argumentCount)
       // ^ requires EnumerationHelper.EnumerableCount(method.Parameters) == methodParameterCount;
     {
+      // Optional parameters (including param array if defined).
+      uint optionalParameterCount = 0;
+      bool hasParamArray = false;
+      bool isLast = true;
+      foreach (IParameterDefinition param in method.Parameters.Reverse()) {
+        if (isLast && param.IsParameterArray) {
+            optionalParameterCount++;
+            hasParamArray = true;
+        }
+        else if (param.HasDefaultValue) optionalParameterCount++;
+        else break;
+        isLast = false;
+      }
+      uint requiredParameterCount = methodParameterCount - optionalParameterCount;
+      bool hasOptionalParameters = optionalParameterCount != 0;
+      if (hasOptionalParameters && requiredParameterCount <= argumentCount && argumentCount <= methodParameterCount) return true;
+      // "extra parameter".
       if (methodParameterCount < 1 || argumentCount < methodParameterCount - 1) return false;
       if (method.AcceptsExtraArguments && argumentCount > methodParameterCount) {
         return true;
       }
-      IEnumerator<IParameterDefinition> parameterEnumerator = method.Parameters.GetEnumerator();
-      while (parameterEnumerator.MoveNext()) {
-        if (--methodParameterCount == 0) {
-          IParameterDefinition lastParameter = parameterEnumerator.Current;
-          if (lastParameter.IsParameterArray) return true;
-        }
-      }
-      return false;
+      // Param array only.
+      return hasParamArray;
     }
 
     /// <summary>
@@ -2879,10 +2907,10 @@ namespace Microsoft.Cci.Ast {
       List<IMethodDefinition>/*?*/ ambiguousMatches = null;
       foreach (IMethodDefinition candidate in candidateMethods) {
         if (bestSoFar is Dummy) {
-          if (this.MethodIsEligible(candidate, arguments)) bestSoFar = candidate;
+          if (this.MethodIsEligible(candidate, arguments, false)) bestSoFar = candidate;
           continue;
         }
-        if (!this.MethodIsEligible(candidate, arguments)) {
+        if (!this.MethodIsEligible(candidate, arguments, false)) {
           continue;
         }
         if (this.Method1MatchesArgumentsBetterThanMethod2(bestSoFar, candidate, arguments)) continue;
@@ -2922,7 +2950,7 @@ namespace Microsoft.Cci.Ast {
     private IMethodDefinition SingleCandidateWithTheGivenNumberOfArguments(IEnumerable<IMethodDefinition> candidateMethods, IEnumerable<Expression> arguments) {
       IMethodDefinition likelyMatch = Dummy.Method;
       foreach (IMethodDefinition candidate in candidateMethods) {
-        if (this.MethodIsEligible(candidate, arguments, true)) {
+        if (this.MethodIsEligible(candidate, arguments, argumentListIsIncomplete: false, allowTypeMismatch: true)) {
           if (!(likelyMatch is Dummy)) return Dummy.Method;
           likelyMatch = candidate;
         }
@@ -4864,7 +4892,7 @@ namespace Microsoft.Cci.Ast {
     {
       if (this.stopTraversal) return;
       foreach (CatchClause catchClause in catchClauses)
-        this.Visit(catchClause);
+        catchClause.Dispatch(this);
     }
 
     /// <summary>
@@ -4876,6 +4904,8 @@ namespace Microsoft.Cci.Ast {
       if (this.stopTraversal) return;
       //^ int oldCount = this.path.Count;
       this.path.Push(catchClause);
+      if (catchClause.ExceptionType != null)
+        this.VisitTypeExpression(catchClause.ExceptionType);
       if (catchClause.FilterCondition != null)
         this.VisitExpression(catchClause.FilterCondition);
       this.VisitStatement(catchClause.Body);
@@ -6350,7 +6380,7 @@ namespace Microsoft.Cci.Ast {
       //^ int oldCount = this.path.Count;
       NestedNamespaceDeclaration/*?*/ nestedNamespace = namespaceDeclarationMember as NestedNamespaceDeclaration;
       if (nestedNamespace != null)
-        this.Visit(nestedNamespace);
+        nestedNamespace.Dispatch(this);
       else {
         TypeDeclaration/*?*/ typeDeclaration = namespaceDeclarationMember as TypeDeclaration;
         if (typeDeclaration != null)
@@ -6401,6 +6431,7 @@ namespace Microsoft.Cci.Ast {
       this.Visit(enumDeclaration.SourceAttributes);
       foreach (TypeExpression baseType in enumDeclaration.BaseTypes)
         this.VisitTypeExpression(baseType);
+      this.Visit(enumDeclaration.TypeDeclarationMembers);
       //^ assume this.path.Count == oldCount+1; //True because all of the virtual methods of this class promise not to decrease this.path.Count.
       this.path.Pop();
     }
@@ -6867,10 +6898,9 @@ namespace Microsoft.Cci.Ast {
       this.Visit(propertyDeclaration.SourceAttributes);
       this.VisitTypeExpression(propertyDeclaration.Type);
       this.Visit(propertyDeclaration.Parameters);
-      if (propertyDeclaration.GetterBody != null)
-        this.VisitStatement(propertyDeclaration.GetterBody);
-      if (propertyDeclaration.SetterBody != null)
-        this.VisitStatement(propertyDeclaration.SetterBody);
+      foreach (MethodDeclaration accessor in propertyDeclaration.Accessors) {
+        this.Visit(accessor);
+      }
       //^ assume this.path.Count == oldCount+1; //True because all of the virtual methods of this class promise not to decrease this.path.Count.
       this.path.Pop();
     }
