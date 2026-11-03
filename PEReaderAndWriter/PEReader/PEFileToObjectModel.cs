@@ -3938,7 +3938,9 @@ namespace Microsoft.Cci.MetadataReader {
         this.ParamSequence = paramSequence;
         this.ParamRowId = paramRowId;
         this.ParamName = paramName;
-        this.ParamFlags = paramFlags;
+        // Silvergun: ByReference and ParamArray are CCI's own flags, set from the signature and the attribute; in a
+        // Param row they are reserved bits (ECMA-335 II.23.1.13), and the CLR ignores them.
+        this.ParamFlags = paramFlags & ~(ParamFlags.ByReference | ParamFlags.ParamArray);
       }
     }
 
