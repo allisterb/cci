@@ -63,9 +63,10 @@ namespace Microsoft.Cci {
   }
 
   /// <summary>
-  /// The failures counted while it is open, on the logical flow that opened it (an <see cref="AsyncLocal{T}"/> chain,
-  /// so nested scopes all count and other threads' failures are not seen). Keeps the first
-  /// <see cref="MaxRecords"/> records. Dispose to close; scopes close in reverse order of opening.
+  /// The failures counted while it is open, on the logical flow that opened it: an <see cref="AsyncLocal{T}"/> chain, so
+  /// nested scopes all count, a task or thread started inside it is on its flow and counts too, and work on unrelated
+  /// flows is not seen. Keeps the first <see cref="MaxRecords"/> records. Dispose to close; a closed scope counts nothing
+  /// more, even while a scope opened inside it is still open.
   /// </summary>
   public sealed class CciAssertionScope : IDisposable {
     public const int MaxRecords = 16;
@@ -73,7 +74,7 @@ namespace Microsoft.Cci {
     readonly CciAssertionScope parent;
     readonly List<CciAssertionRecord> records = new List<CciAssertionRecord>();
     int count;
-    bool disposed;
+    volatile bool disposed;
 
     internal CciAssertionScope(CciAssertionScope parent) {
       this.parent = parent;
@@ -93,7 +94,12 @@ namespace Microsoft.Cci {
       get { return this.parent; }
     }
 
+    internal bool IsDisposed {
+      get { return this.disposed; }
+    }
+
     internal void Add(CciAssertionRecord record) {
+      if (this.disposed) return;
       Interlocked.Increment(ref this.count);
       lock (this.records) {
         if (this.records.Count < MaxRecords) this.records.Add(record);
@@ -109,8 +115,10 @@ namespace Microsoft.Cci {
 
   /// <summary>
   /// The policy for CCI's failed assertions (ADR 0022 Stage 1): <see cref="Mode"/>, the process-wide
-  /// <see cref="Total"/>, and <see cref="BeginScope"/> for per-read counts. Never lets a failure reach
-  /// <c>Environment.FailFast</c>.
+  /// <see cref="Total"/>, and <see cref="BeginScope"/> for per-read counts. No failure of CCI's own assertions reaches
+  /// <c>Environment.FailFast</c>. Other compilations CCI calls (the DiaSymReader converter) are outside the alias; the
+  /// contract handler is process-wide, so any library's contract failure in a host that loaded CCI is handled and
+  /// recorded here.
   /// </summary>
   public static class CciAssertions {
     /// <summary>Set to <c>throw</c> to start in <see cref="CciAssertionMode.Throw"/> mode.</summary>
@@ -157,8 +165,12 @@ namespace Microsoft.Cci {
     }
 
     internal static void Close(CciAssertionScope scope) {
-      // Only the innermost open scope of this flow is replaced; closing out of order leaves the chain as it is.
-      if (ReferenceEquals(current.Value, scope)) current.Value = scope.Parent;
+      // Pop the innermost scope if it is this one, then every closed one behind it: an outer scope closed out of order
+      // is dropped when the scope inside it closes, so a flow never keeps a chain of closed scopes.
+      if (!ReferenceEquals(current.Value, scope)) return;
+      var next = scope.Parent;
+      while (next != null && next.IsDisposed) next = next.Parent;
+      current.Value = next;
     }
 
     internal static CciAssertionRecord Report(CciAssertionKind kind, string message, string condition) {

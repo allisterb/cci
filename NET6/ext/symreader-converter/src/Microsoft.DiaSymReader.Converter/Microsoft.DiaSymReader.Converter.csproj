@@ -37,6 +37,16 @@
     <EmbeddedResource Update="ConverterResources.resx" GenerateSource="true" />
   </ItemGroup>
 
+  <!-- Silvergun: never compile with DEBUG, in any configuration (ADR 0022 Stage 1 review C1). This assembly is its own
+       compilation, out of reach of CCI's Debug alias, and with DEBUG its System.Diagnostics.Debug.Assert (its own and
+       the PooledObjects/Debugging source packages') routes a malformed PDB to Environment.FailFast. Without it, the same
+       paths throw, which CCI's PdbReader callers catch. Runs before BeforeCompile, so the compile-inputs cache sees it. -->
+  <Target Name="SilvergunStripDebugDefine" BeforeTargets="BeforeCompile">
+    <PropertyGroup>
+      <DefineConstants>$([System.String]::Copy(';$(DefineConstants);').Replace(';DEBUG;', ';').Trim(';'))</DefineConstants>
+    </PropertyGroup>
+  </Target>
+
   <!-- Workaround for https://github.com/NuGet/Home/issues/4856 -->
   <ItemGroup>
     <Compile Include="..\Common\PdbGuids.cs" Link="Common\PdbGuids.cs" />
