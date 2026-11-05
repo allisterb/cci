@@ -6,6 +6,8 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <!-- Silvergun: ADR 0022 Stage 1, the Debug alias and the contract-failure handler. -->
+    <Compile Include="$(CciSrc)\CoreObjectModel\MetadataHelper\CciAssertions.cs" />
     <Compile Include="$(CciSrc)\CoreObjectModel\CodeModel\Contracts.cs" />
     <Compile Include="$(CciSrc)\CoreObjectModel\CodeModel\DummyObjects.cs" />
     <Compile Include="$(CciSrc)\CoreObjectModel\CodeModel\ExpressionHelper.cs" />

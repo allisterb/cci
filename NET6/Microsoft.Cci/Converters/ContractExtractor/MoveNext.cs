@@ -276,7 +276,7 @@ namespace Microsoft.Cci.MutableContracts {
           if (this.capturedThings.TryGetValue(k, out capturedThing)) {
             var be = capturedThing as IBoundExpression;
             if (be == null) {
-              System.Diagnostics.Debug.Assert(false);
+              Debug.Assert(false); // Silvergun: through the CciDebug alias (ADR 0022 Stage 1), not System.Diagnostics.Debug.
             }
             addressableExpression.Definition = be.Definition;
             addressableExpression.Instance = be.Instance;
